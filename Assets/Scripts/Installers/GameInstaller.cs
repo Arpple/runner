@@ -16,4 +16,5 @@ public class GameInstaller : MonoInstaller
 		Container.BindFactory<PlayerStateRunning, PlayerStateRunning.Factory>();
 		Container.BindFactory<PlayerStateJumping, PlayerStateJumping.Factory>();
 	}
+		
 }

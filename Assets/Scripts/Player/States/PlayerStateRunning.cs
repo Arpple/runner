@@ -1,23 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Zenject;
+using System;
 
 public class PlayerStateRunning : PlayerState
 {
-//	public class Settings
-//	{
-//	}
 
-//	readonly Settings _settings;
 	readonly Player _player;
 
 	public PlayerStateRunning(
 		Player player
-//		Settings settings
 	)
 	{
 		_player = player;
-//		_settings = settings;
 	}
 
 	public override void Update()

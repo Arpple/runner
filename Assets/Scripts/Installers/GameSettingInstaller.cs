@@ -16,14 +16,14 @@ public class GameSettingInstaller : ScriptableObjectInstaller
 	[Serializable]
 	public class PlayerSetting
 	{
-//		public PlayerStateRunning.Settings RunningSetting;
+		public Player.Settings Player;
 		public PlayerStateJumping.Settings JumpingSetting;
 	}
 		
 
     public override void InstallBindings()
     {
-//		Container.BindInstance(Player.RunningSetting);
+		Container.BindInstance(Player.Player);
 		Container.BindInstance(Player.JumpingSetting);
     }
 }

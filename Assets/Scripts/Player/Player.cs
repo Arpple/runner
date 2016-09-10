@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Zenject;
+using System;
 
 public class Player : MonoBehaviour 
 {
@@ -31,5 +32,11 @@ public class Player : MonoBehaviour
 		}
 		_state = _stateFactory.CreateState(state);
 		_state.Start();
+	}
+
+	[Serializable]
+	public class Settings
+	{
+		public float MoveSpeed;
 	}
 }
