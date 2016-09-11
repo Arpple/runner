@@ -12,6 +12,7 @@ public class GameSettingInstaller : ScriptableObjectInstaller
 	}
 
 	public PlayerSetting Player;
+	public EnemySeting Enemy;
 
 	[Serializable]
 	public class PlayerSetting
@@ -20,10 +21,17 @@ public class GameSettingInstaller : ScriptableObjectInstaller
 		public PlayerStateJumping.Settings JumpingSetting;
 	}
 		
+	[Serializable]
+	public class EnemySeting
+	{
+		public EnemyManager.Settings ManagerSetting;
+	}
 
     public override void InstallBindings()
     {
 		Container.BindInstance(Player.Player);
 		Container.BindInstance(Player.JumpingSetting);
+
+		Container.BindInstance(Enemy.ManagerSetting);
     }
 }

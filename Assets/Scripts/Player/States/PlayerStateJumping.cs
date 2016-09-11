@@ -50,7 +50,7 @@ public class PlayerStateJumping : PlayerState
 
 	void Move()
 	{
-		_player.transform.Translate(_movement);
+		_player.transform.Translate(_movement * Time.deltaTime);
 		_movement.y -= _settings.Gravity;
 	}
 

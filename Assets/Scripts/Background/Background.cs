@@ -25,7 +25,7 @@ public class Background : MonoBehaviour
 
 	void Update()
 	{
-		Move(_playerSettings.MoveSpeed);
+		Move(_playerSettings.MoveSpeed * Time.deltaTime);
 	}
 
 	void GetChild()
