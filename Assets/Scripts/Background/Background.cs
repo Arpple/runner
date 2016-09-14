@@ -17,13 +17,14 @@ public class Background : MonoBehaviour
 	}
 
 	private List<SpriteRenderer> _childList;
+	private List<Vector3> _childOriginalPosition;
 
 	void Start()
 	{
 		GetChild();
 	}
 
-	void Update()
+	public void Tick()
 	{
 		Move(_playerSettings.MoveSpeed * Time.deltaTime);
 	}
@@ -31,6 +32,7 @@ public class Background : MonoBehaviour
 	void GetChild()
 	{
 		_childList = new List<SpriteRenderer>();
+		_childOriginalPosition = new List<Vector3>();
 
 		for (int i = 0; i < transform.childCount; i++)
 		{
@@ -43,6 +45,7 @@ public class Background : MonoBehaviour
 			}
 		}
 		_childList = _childList.OrderBy( t => t.transform.position.x).ToList();
+		_childOriginalPosition = _childList.Select( c => c.transform.position).ToList();
 	}
 
 	public void Move(float speed)
@@ -70,6 +73,15 @@ public class Background : MonoBehaviour
 					_childList.Add(mostLeft);
 				}
 			}
+		}
+	}
+
+	public void Reset()
+	{
+		Debug.Log("RESET");
+		for(int i = 0; i < _childList.Count; i++)
+		{
+			_childList[i].transform.position = _childOriginalPosition[i];
 		}
 	}
 

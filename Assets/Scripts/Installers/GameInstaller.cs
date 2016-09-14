@@ -28,11 +28,13 @@ public class GameInstaller : MonoInstaller
 
 		Container.BindFactory<PlayerStateRunning, PlayerStateRunning.Factory>();
 		Container.BindFactory<PlayerStateJumping, PlayerStateJumping.Factory>();
+
+		Container.BindSignal<Signals.PlayerDead>();
+		Container.BindTrigger<Signals.PlayerDead.Trigger>();
 	}
 
 	void InstallEnemy()
 	{
-		Container.Bind<ITickable>().To<EnemyManager>().AsSingle();
 		Container.Bind<EnemyManager>().AsSingle();
 
 		Container.Bind<EnemyFactory>().AsSingle();

@@ -6,7 +6,7 @@ using System.Linq;
 using Zenject;
 using ModestTree;
 
-public class EnemyManager : ITickable
+public class EnemyManager
 {
 	[Serializable]
 	public class Settings
@@ -43,7 +43,6 @@ public class EnemyManager : ITickable
 	{
 		Assert.That(!_started);
 		_started = true;
-		Debug.Log("START");
 		ResetAll();
 	}
 
