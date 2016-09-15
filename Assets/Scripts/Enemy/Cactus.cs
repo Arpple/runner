@@ -6,19 +6,24 @@ using ModestTree;
 
 public class Cactus : Enemy
 {
-	Player.Settings _playerSettings;
+	Player _player;
 
 	[Inject]
 	public void Construct(
-		Player.Settings playerSettings
+		Player player
 	)
 	{
-		_playerSettings = playerSettings;
+		_player = player;
 	}
 
 	public override void Tick()
 	{
-		transform.Translate(new Vector3(-_playerSettings.MoveSpeed, 0, 0) * Time.deltaTime);
+		Move();
+	}
+
+	void Move()
+	{
+		transform.Translate(new Vector3(- _player.currentSpeed, 0, 0) * Time.deltaTime);
 	}
 
 	public override void Dispose()

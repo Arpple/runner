@@ -11,8 +11,19 @@ public class GameSettingInstaller : ScriptableObjectInstaller
 		ScriptableObjectUtility.CreateAsset<GameSettingInstaller> ();
 	}
 
+
 	public PlayerSetting Player;
 	public EnemySeting Enemy;
+
+
+	public override void InstallBindings()
+	{
+		Container.BindInstance(Player.Player);
+		Container.BindInstance(Player.JumpingSetting);
+
+		Container.BindInstance(Enemy.ManagerSetting);
+	}
+
 
 	[Serializable]
 	public class PlayerSetting
@@ -20,6 +31,7 @@ public class GameSettingInstaller : ScriptableObjectInstaller
 		public Player.Settings Player;
 		public PlayerStateJumping.Settings JumpingSetting;
 	}
+
 		
 	[Serializable]
 	public class EnemySeting
@@ -27,11 +39,5 @@ public class GameSettingInstaller : ScriptableObjectInstaller
 		public EnemyManager.Settings ManagerSetting;
 	}
 
-    public override void InstallBindings()
-    {
-		Container.BindInstance(Player.Player);
-		Container.BindInstance(Player.JumpingSetting);
-
-		Container.BindInstance(Enemy.ManagerSetting);
-    }
+   
 }

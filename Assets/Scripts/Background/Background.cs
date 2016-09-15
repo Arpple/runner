@@ -6,28 +6,34 @@ using System.Linq;
 
 public class Background : MonoBehaviour 
 {
-	Player.Settings _playerSettings;
+	//Property
+	List<SpriteRenderer> _childList;
+	List<Vector3> _childOriginalPosition;
+
+	//Dependency
+	Player _player;
 
 	[Inject]
 	public void Construct(
-		Player.Settings playerSettings
+		Player player
 	)
 	{
-		_playerSettings = playerSettings;
+		_player = player;
 	}
 
-	private List<SpriteRenderer> _childList;
-	private List<Vector3> _childOriginalPosition;
 
 	void Start()
 	{
 		GetChild();
 	}
 
+
 	public void Tick()
 	{
-		Move(_playerSettings.MoveSpeed * Time.deltaTime);
+		Move();
+		LoopBackground();
 	}
+
 
 	void GetChild()
 	{
@@ -48,11 +54,12 @@ public class Background : MonoBehaviour
 		_childOriginalPosition = _childList.Select( c => c.transform.position).ToList();
 	}
 
-	public void Move(float speed)
+
+	void Move()
 	{
-		transform.Translate(new Vector3(-speed, 0, 0));
-		LoopBackground();
+		transform.Translate(new Vector3(- _player.currentSpeed, 0, 0) * Time.deltaTime);
 	}
+
 
 	void LoopBackground()
 	{
@@ -76,9 +83,9 @@ public class Background : MonoBehaviour
 		}
 	}
 
+
 	public void Reset()
 	{
-		Debug.Log("RESET");
 		for(int i = 0; i < _childList.Count; i++)
 		{
 			_childList[i].transform.position = _childOriginalPosition[i];

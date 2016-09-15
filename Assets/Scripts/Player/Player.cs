@@ -11,33 +11,38 @@ public class Player : MonoBehaviour
 	PlayerStateFactory _stateFactory;
 	PlayerState _state = null;
 	Signals.PlayerDead.Trigger _deadTrigger;
-	Background _background;
+	Settings _settings;
+
+	public float currentSpeed;
 
 	[Inject]
 	public void Construct(
 		PlayerStateFactory stateFactory,
 		Signals.PlayerDead.Trigger deadTrigger,
-		Background background
+		Settings settings
 	)
 	{
 		_stateFactory = stateFactory;
 		_deadTrigger = deadTrigger;
-		_background = background;
+		_settings = settings;
 
 		_originalPosition = transform.position;
 	}
 
 	public void Initialize()
 	{
+		currentSpeed = _settings.InitialSpeed;
 		transform.position = _originalPosition;
 		ChangeState(PlayerStates.Running);
-		_background.Reset();
 	}
 
 	public void Tick()
 	{
 		_state.Update();
-		_background.Tick();
+		if(currentSpeed < _settings.MaximumSpeed)
+		{
+			currentSpeed = Math.Min(currentSpeed + _settings.Acceleration * Time.deltaTime, _settings.MaximumSpeed);
+		}
 	}
 
 	public void ChangeState(PlayerStates state)
@@ -61,6 +66,8 @@ public class Player : MonoBehaviour
 	[Serializable]
 	public class Settings
 	{
-		public float MoveSpeed;
+		public float InitialSpeed;
+		public float Acceleration;
+		public float MaximumSpeed;
 	}
 }

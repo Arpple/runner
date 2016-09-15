@@ -8,23 +8,18 @@ using ModestTree;
 
 public class EnemyManager
 {
-	[Serializable]
-	public class Settings
-	{
-		public float SpawnTimeInitial;
-		public float SpawnTimeReduct;
-		public float SpawnTimeMinumum;
-	}
-		
+	
 	readonly List<Enemy> _enemyList = new List<Enemy>();
-	readonly EnemyFactory _enemyFactory;
-	readonly Settings _settings;
-	readonly LevelHelper _level;
-	readonly Transform _spawnPoint;
-
 	bool _started;
 	float _spawnTime;
 	float _spawnCounter;
+		
+
+	readonly Settings _settings;
+	readonly EnemyFactory _enemyFactory;
+	readonly LevelHelper _level;
+	readonly Transform _spawnPoint;
+
 
 	public EnemyManager(
 		Settings settings,
@@ -39,12 +34,14 @@ public class EnemyManager
 		_spawnPoint = spawnPoint;
 	}
 
+
 	public void Start()
 	{
 		Assert.That(!_started);
 		_started = true;
 		ResetAll();
 	}
+
 
 	void ResetAll()
 	{
@@ -57,11 +54,13 @@ public class EnemyManager
 		_spawnCounter = _spawnTime;
 	}
 
+
 	public void Stop()
 	{
 		Assert.That(_started);
 		_started = false;
 	}
+
 
 	public void Tick()
 	{
@@ -82,10 +81,12 @@ public class EnemyManager
 		}
 	}
 
+
 	bool CheckDispose(Enemy enemy)
 	{
 		return enemy.transform.position.x < _level.Left;
 	}
+
 
 	void Spawn()
 	{
@@ -105,5 +106,14 @@ public class EnemyManager
 					_spawnTime = _settings.SpawnTimeMinumum;
 			}
 		}
+	}
+
+
+	[Serializable]
+	public class Settings
+	{
+		public float SpawnTimeInitial;
+		public float SpawnTimeReduct;
+		public float SpawnTimeMinumum;
 	}
 }

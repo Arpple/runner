@@ -5,18 +5,13 @@ using Zenject;
 
 public class PlayerStateJumping : PlayerState
 {
-	[Serializable]
-	public class Settings
-	{
-		public float JumpSpeed;
-		public float Gravity;
-	}
-
-	readonly Settings _settings;
-	readonly Player _player;
 
 	Vector3 _groundPosition;
 	Vector3 _movement;
+	
+	readonly Settings _settings;
+	readonly Player _player;
+
 
 	public PlayerStateJumping(
 		Settings settings,
@@ -27,11 +22,13 @@ public class PlayerStateJumping : PlayerState
 		_player = player;
 	}
 
+
 	public override void Start()
 	{
 		_groundPosition = _player.transform.position;
 		_movement.y = _settings.JumpSpeed;
 	}
+
 
 	public override void Update()
 	{
@@ -42,11 +39,13 @@ public class PlayerStateJumping : PlayerState
 			_player.ChangeState(PlayerStates.Running);
 		}
 	}
-		
+
+
 	public override void Stop()
 	{
 		
 	}
+
 
 	void Move()
 	{
@@ -54,9 +53,18 @@ public class PlayerStateJumping : PlayerState
 		_movement.y -= _settings.Gravity;
 	}
 
+
 	bool ReachGround()
 	{
 		return _player.transform.position.y <= _groundPosition.y;
+	}
+
+
+	[Serializable]
+	public class Settings
+	{
+		public float JumpSpeed;
+		public float Gravity;
 	}
 
 	public class Factory : Factory<PlayerStateJumping>

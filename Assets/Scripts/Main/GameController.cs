@@ -13,14 +13,18 @@ public enum GameStates
 
 public class GameController : IInitializable, ITickable, IDisposable
 {
+	//Property
+	GameStates _state = GameStates.WaitingToStart;
+
+	//Dependency
 	readonly Player _player;
 	readonly EnemyManager _enemyManager;
 	readonly Signals.PlayerDead _playerDeadSignal;
-
-	GameStates _state = GameStates.WaitingToStart;
+	readonly Background _background;
 
 	public GameController(
 		Player player,
+		Background background,
 		EnemyManager enemyManager,
 		Signals.PlayerDead playerDeadSignal
 	)
@@ -28,17 +32,21 @@ public class GameController : IInitializable, ITickable, IDisposable
 		_player = player;
 		_enemyManager = enemyManager;
 		_playerDeadSignal = playerDeadSignal;
+		_background = background;
 	}
+
 
 	public void Initialize()
 	{
 		_playerDeadSignal.Event += OnPlayerDead;
 	}
 
+
 	public void Dispose()
 	{
 		_playerDeadSignal.Event -= OnPlayerDead;
 	}
+
 
 	public void Tick()
 	{
@@ -71,6 +79,7 @@ public class GameController : IInitializable, ITickable, IDisposable
 		}
 	}
 
+	#region StateUpdate
 	void UpdateStarting()
 	{
 		Assert.That(_state == GameStates.WaitingToStart);
@@ -85,6 +94,7 @@ public class GameController : IInitializable, ITickable, IDisposable
 		Assert.That(_state == GameStates.Playing);
 		_player.Tick();
 		_enemyManager.Tick();
+		_background.Tick();
 	}
 
 	void UpdateGameOver()
@@ -95,6 +105,7 @@ public class GameController : IInitializable, ITickable, IDisposable
 			StartGame();
 		}
 	}
+	#endregion
 
 	void StartGame()
 	{
@@ -102,7 +113,9 @@ public class GameController : IInitializable, ITickable, IDisposable
 		_state = GameStates.Playing;
 		_player.Initialize();
 		_enemyManager.Start();
+		_background.Reset();
 	}
+
 
 	void OnPlayerDead()
 	{
@@ -110,4 +123,5 @@ public class GameController : IInitializable, ITickable, IDisposable
 		_state = GameStates.GameOver;
 		_enemyManager.Stop();
 	}
+
 }
