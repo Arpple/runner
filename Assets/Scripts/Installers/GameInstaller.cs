@@ -44,6 +44,7 @@ public class GameInstaller : MonoInstaller
 	void InstallMisc()
 	{
 		Container.Bind<LevelHelper>().AsSingle();
+		Container.Bind<Debugger>().AsSingle();
 	}
 
 	[Serializable]

@@ -6,10 +6,12 @@ using UnityEngine.UI;
 public class Debugger : MonoBehaviour 
 {
 	#if DEBUG
-	public GameObject PlayerSpeedText;
+
+	[Inject(Id = "debug_speed")] Text _speedText;
+	[Inject(Id = "debug_jump")] Text _jumpText;
 
 	Player _player;
-
+	public static Debugger instance;
 
 	[Inject]
 	public void Construct(
@@ -17,6 +19,7 @@ public class Debugger : MonoBehaviour
 	)
 	{
 		_player = player;
+		Debugger.instance = this;
 	}
 
 
@@ -28,8 +31,12 @@ public class Debugger : MonoBehaviour
 
 	void UpdatePlayerSpeed()
 	{
-		Text speedText = PlayerSpeedText.GetComponent<Text>();
-		speedText.text = "speed = " + _player.currentSpeed.ToString();
+		_speedText.text = "speed = " + _player.currentSpeed.ToString();
+	}
+
+	public void UpdatePlayerJump(float jumpPower)
+	{
+		_jumpText.text = "last jump = " + jumpPower.ToString();
 	}
 	#endif
 }

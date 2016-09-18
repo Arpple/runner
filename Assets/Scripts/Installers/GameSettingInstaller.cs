@@ -20,6 +20,7 @@ public class GameSettingInstaller : ScriptableObjectInstaller
 	{
 		Container.BindInstance(Player.Player);
 		Container.BindInstance(Player.JumpingSetting);
+		Container.BindInstance(Player.RunningSetting);
 
 		Container.BindInstance(Enemy.ManagerSetting);
 	}
@@ -30,6 +31,7 @@ public class GameSettingInstaller : ScriptableObjectInstaller
 	{
 		public Player.Settings Player;
 		public PlayerStateJumping.Settings JumpingSetting;
+		public PlayerStateRunning.Settings RunningSetting;
 	}
 
 		

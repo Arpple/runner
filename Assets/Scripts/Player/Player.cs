@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
 	Settings _settings;
 
 	public float currentSpeed;
+	public float currentJump;
 
 	[Inject]
 	public void Construct(

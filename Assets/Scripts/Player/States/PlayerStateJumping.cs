@@ -26,7 +26,7 @@ public class PlayerStateJumping : PlayerState
 	public override void Start()
 	{
 		_groundPosition = _player.transform.position;
-		_movement.y = _settings.JumpSpeed;
+		_movement.y = _player.currentJump;
 	}
 
 
@@ -43,7 +43,6 @@ public class PlayerStateJumping : PlayerState
 
 	public override void Stop()
 	{
-		
 	}
 
 
@@ -63,7 +62,6 @@ public class PlayerStateJumping : PlayerState
 	[Serializable]
 	public class Settings
 	{
-		public float JumpSpeed;
 		public float Gravity;
 	}
 
