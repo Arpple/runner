@@ -4,17 +4,17 @@ using System.Collections;
 using Zenject;
 using ModestTree;
 
-public enum GameStates
-{
-	WaitingToStart,
-	Playing,
-	GameOver,
-}
-
 public class GameController : IInitializable, ITickable, IDisposable
 {
 	//Property
 	GameStates _state = GameStates.WaitingToStart;
+
+	public enum GameStates
+	{
+		WaitingToStart,
+		Playing,
+		GameOver,
+	}
 
 	//Dependency
 	readonly Player _player;
@@ -95,6 +95,17 @@ public class GameController : IInitializable, ITickable, IDisposable
 		_player.Tick();
 		_enemyManager.Tick();
 		_background.Tick();
+
+		PlayerInputUpdate();
+	}
+
+	void PlayerInputUpdate()
+	{
+		Assert.That(_state == GameStates.Playing);
+		if(Input.GetMouseButton(0))
+		{
+			_player.Jump();
+		}
 	}
 
 	void UpdateGameOver()
@@ -112,8 +123,8 @@ public class GameController : IInitializable, ITickable, IDisposable
 		Assert.That(_state == GameStates.WaitingToStart || _state == GameStates.GameOver);
 		_state = GameStates.Playing;
 		_player.Initialize();
-		_enemyManager.Start();
-		_background.Reset();
+		_enemyManager.Initialize();
+		_background.Initialize();
 	}
 
 

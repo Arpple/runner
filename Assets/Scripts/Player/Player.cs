@@ -2,58 +2,129 @@
 using System.Collections;
 using Zenject;
 using System;
+using ModestTree;
 
 public class Player : MonoBehaviour 
 {
+	public enum PlayerStates
+	{
+		OnGround,
+		Jumping,
+	}
+
+	PlayerStates _state;
 
 	Vector3 _originalPosition;
-
-	PlayerStateFactory _stateFactory;
-	PlayerState _state = null;
 	Signals.PlayerDead.Trigger _deadTrigger;
 	Settings _settings;
 
-	public float currentSpeed;
+	public float CurrentSpeed
+	{
+		get; private set;
+	}
+
+
 	public float currentJump;
 
 	[Inject]
 	public void Construct(
-		PlayerStateFactory stateFactory,
 		Signals.PlayerDead.Trigger deadTrigger,
 		Settings settings
 	)
 	{
-		_stateFactory = stateFactory;
 		_deadTrigger = deadTrigger;
 		_settings = settings;
+
+		_state = PlayerStates.OnGround;
 
 		_originalPosition = transform.position;
 	}
 
 	public void Initialize()
 	{
-		currentSpeed = _settings.InitialSpeed;
+		CurrentSpeed = _settings.InitialSpeed;
 		transform.position = _originalPosition;
-		ChangeState(PlayerStates.Running);
+		_state = PlayerStates.OnGround;
 	}
 
 	public void Tick()
 	{
-		_state.Update();
-		if(currentSpeed < _settings.MaximumSpeed)
+		switch(_state)
 		{
-			currentSpeed = Math.Min(currentSpeed + _settings.Acceleration * Time.deltaTime, _settings.MaximumSpeed);
+			case PlayerStates.OnGround:
+			{
+				UpdateOnGround();
+				break;
+			}
+
+			case PlayerStates.Jumping:
+			{
+				UpdateJumping();
+				break;
+			}
+
+			default:
+			{
+				Assert.That(false);
+				break;	
+			}
 		}
 	}
 
-	public void ChangeState(PlayerStates state)
+	Vector3 _jumpForce;
+
+	public void Jump()
 	{
-		if (_state != null)
+		if(_state == PlayerStates.OnGround)
 		{
-			_state.Stop();
+			_jumpForce = new Vector3(0, _settings.JumpForce, 0);
+			_state = PlayerStates.Jumping;
+
+			#if DEBUG
+			Debugger.instance.UpdatePlayerJump(_jumpForce.y);
+			#endif
 		}
-		_state = _stateFactory.CreateState(state);
-		_state.Start();
+	}
+
+	void UpdateOnGround()
+	{
+		Assert.That(_state == PlayerStates.OnGround);
+		Acceleration();
+	}
+
+	void UpdateJumping()
+	{
+		Assert.That(_state == PlayerStates.Jumping);
+		Acceleration();
+
+		Assert.That(_jumpForce.x == 0 && _jumpForce.z == 0);
+		transform.Translate(_jumpForce * Time.deltaTime);
+		_jumpForce.y -= _settings.Gravity;
+
+		if(ReachGround())
+		{
+			transform.position = new Vector3(transform.position.x, _originalPosition.y, transform.position.y);
+			_state = PlayerStates.OnGround;
+		}
+	}
+
+	bool ReachGround()
+	{
+		return transform.position.y <= _originalPosition.y;
+	}
+
+	void Acceleration()
+	{
+		if(CurrentSpeed < _settings.MaximumSpeed)
+		{
+			CurrentSpeed += _settings.Acceleration;
+			if(CurrentSpeed > _settings.MaximumSpeed)
+			{
+				CurrentSpeed = _settings.MaximumSpeed;
+			}
+		}
+			
+		Assert.That(CurrentSpeed <= _settings.MaximumSpeed);
 	}
 
 	void OnTriggerEnter2D(Collider2D other)
@@ -70,5 +141,8 @@ public class Player : MonoBehaviour
 		public float InitialSpeed;
 		public float Acceleration;
 		public float MaximumSpeed;
+
+		public float JumpForce;
+		public float Gravity;
 	}
 }

@@ -24,11 +24,6 @@ public class GameInstaller : MonoInstaller
 
 	void InstallPlayer()
 	{
-		Container.Bind<PlayerStateFactory>().AsSingle();
-
-		Container.BindFactory<PlayerStateRunning, PlayerStateRunning.Factory>();
-		Container.BindFactory<PlayerStateJumping, PlayerStateJumping.Factory>();
-
 		Container.BindSignal<Signals.PlayerDead>();
 		Container.BindTrigger<Signals.PlayerDead.Trigger>();
 	}

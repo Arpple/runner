@@ -23,7 +23,6 @@ public class Cactus : Enemy
 
 	void Move()
 	{
-		transform.Translate(new Vector3(- _player.currentSpeed, 0, 0) * Time.deltaTime);
 	}
 
 	public override void Dispose()
