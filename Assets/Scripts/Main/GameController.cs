@@ -102,9 +102,20 @@ public class GameController : IInitializable, ITickable, IDisposable
 	void PlayerInputUpdate()
 	{
 		Assert.That(_state == GameStates.Playing);
+
+		if(Input.GetMouseButtonDown(0))
+		{
+			_player.StartChargingJump();
+		}
+
 		if(Input.GetMouseButton(0))
 		{
-			_player.Jump();
+			_player.ChargingJump();
+		}
+
+		if(Input.GetMouseButtonUp(0))
+		{
+			_player.EndChargingJump();
 		}
 	}
 

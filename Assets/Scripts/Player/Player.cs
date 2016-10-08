@@ -23,9 +23,6 @@ public class Player : MonoBehaviour
 		get; private set;
 	}
 
-
-	public float currentJump;
-
 	[Inject]
 	public void Construct(
 		Signals.PlayerDead.Trigger deadTrigger,
@@ -70,22 +67,8 @@ public class Player : MonoBehaviour
 			}
 		}
 	}
-
-	Vector3 _jumpForce;
-
-	public void Jump()
-	{
-		if(_state == PlayerStates.OnGround)
-		{
-			_jumpForce = new Vector3(0, _settings.JumpForce, 0);
-			_state = PlayerStates.Jumping;
-
-			#if DEBUG
-			Debugger.instance.UpdatePlayerJump(_jumpForce.y);
-			#endif
-		}
-	}
-
+		
+	#region StateUpdate
 	void UpdateOnGround()
 	{
 		Assert.That(_state == PlayerStates.OnGround);
@@ -98,6 +81,7 @@ public class Player : MonoBehaviour
 		Acceleration();
 
 		Assert.That(_jumpForce.x == 0 && _jumpForce.z == 0);
+		Debug.Log("Translate : " + _jumpForce);
 		transform.Translate(_jumpForce * Time.deltaTime);
 		_jumpForce.y -= _settings.Gravity;
 
@@ -107,11 +91,70 @@ public class Player : MonoBehaviour
 			_state = PlayerStates.OnGround;
 		}
 	}
+	#endregion
+		
+	#region Jump
+	bool _jumpHolding;
+	float _jumpHoldTime;
+	Vector3 _jumpForce;
 
+	public void StartChargingJump()
+	{
+		if(_state == PlayerStates.OnGround)
+		{
+			Assert.That(!_jumpHolding);
+			_jumpHolding = true;
+			_jumpHoldTime = 0;
+		}
+	}
+
+	public void ChargingJump()
+	{
+		if(_state == PlayerStates.OnGround && _jumpHolding)
+		{
+			_jumpHoldTime += Time.deltaTime;
+			if(_jumpHoldTime >= _settings.MaxJumpHoldTime)
+			{
+				Jump();
+			}
+		}
+	}
+
+	public void EndChargingJump()
+	{
+		if(_state == PlayerStates.OnGround && _jumpHolding)
+		{
+			Jump();
+		}
+	}
+
+	public void Jump()
+	{
+		Assert.That(_state == PlayerStates.OnGround);
+		float jumpForce = 0;
+		if(_jumpHoldTime < _settings.MinJumpHoldTime)
+		{
+			jumpForce = _settings.MinJumpForce;
+		}
+		else
+		{
+			jumpForce = Math.Min(_jumpHoldTime / _settings.MaxJumpHoldTime * _settings.MaxJumpForce, _settings.MaxJumpForce);
+		}
+
+		_state = PlayerStates.Jumping;
+		_jumpHolding = false;
+		_jumpForce = new Vector3(0, jumpForce, 0);
+
+		#if DEBUG
+		Debugger.instance.UpdatePlayerJump(jumpForce);
+		#endif
+	}
+		
 	bool ReachGround()
 	{
 		return transform.position.y <= _originalPosition.y;
 	}
+	#endregion
 
 	void Acceleration()
 	{
@@ -142,7 +185,11 @@ public class Player : MonoBehaviour
 		public float Acceleration;
 		public float MaximumSpeed;
 
-		public float JumpForce;
 		public float Gravity;
+
+		public float MinJumpForce;
+		public float MinJumpHoldTime;
+		public float MaxJumpForce;
+		public float MaxJumpHoldTime;
 	}
 }
