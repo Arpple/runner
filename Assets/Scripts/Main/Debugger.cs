@@ -31,7 +31,7 @@ public class Debugger : MonoBehaviour
 
 	void UpdatePlayerSpeed()
 	{
-		_speedText.text = "speed = " + _player.currentSpeed.ToString();
+		_speedText.text = "speed = " + _player.CurrentSpeed.ToString();
 	}
 
 	public void UpdatePlayerJump(float jumpPower)

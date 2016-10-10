@@ -19,14 +19,18 @@ public class Background : MonoBehaviour
 	)
 	{
 		_player = player;
-	}
-
-
-	void Start()
-	{
 		GetChild();
 	}
 
+
+	public void Initialize()
+	{
+		for(int i = 0; i < _childList.Count; i++)
+		{
+			_childList[i].transform.position = _childOriginalPosition[i];
+		}
+	}
+		
 
 	public void Tick()
 	{
@@ -57,7 +61,6 @@ public class Background : MonoBehaviour
 
 	void Move()
 	{
-		transform.Translate(new Vector3(- _player.currentSpeed, 0, 0) * Time.deltaTime);
 	}
 
 
@@ -82,14 +85,4 @@ public class Background : MonoBehaviour
 			}
 		}
 	}
-
-
-	public void Reset()
-	{
-		for(int i = 0; i < _childList.Count; i++)
-		{
-			_childList[i].transform.position = _childOriginalPosition[i];
-		}
-	}
-
 }

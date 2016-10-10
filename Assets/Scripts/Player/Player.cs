@@ -2,58 +2,172 @@
 using System.Collections;
 using Zenject;
 using System;
+using ModestTree;
 
 public class Player : MonoBehaviour 
 {
+	public enum PlayerStates
+	{
+		OnGround,
+		Jumping,
+	}
+
+	PlayerStates _state;
 
 	Vector3 _originalPosition;
-
-	PlayerStateFactory _stateFactory;
-	PlayerState _state = null;
 	Signals.PlayerDead.Trigger _deadTrigger;
 	Settings _settings;
 
-	public float currentSpeed;
-	public float currentJump;
+	public float CurrentSpeed
+	{
+		get; private set;
+	}
 
 	[Inject]
 	public void Construct(
-		PlayerStateFactory stateFactory,
 		Signals.PlayerDead.Trigger deadTrigger,
 		Settings settings
 	)
 	{
-		_stateFactory = stateFactory;
 		_deadTrigger = deadTrigger;
 		_settings = settings;
+
+		_state = PlayerStates.OnGround;
 
 		_originalPosition = transform.position;
 	}
 
 	public void Initialize()
 	{
-		currentSpeed = _settings.InitialSpeed;
+		CurrentSpeed = _settings.InitialSpeed;
 		transform.position = _originalPosition;
-		ChangeState(PlayerStates.Running);
+		_state = PlayerStates.OnGround;
 	}
 
 	public void Tick()
 	{
-		_state.Update();
-		if(currentSpeed < _settings.MaximumSpeed)
+		switch(_state)
 		{
-			currentSpeed = Math.Min(currentSpeed + _settings.Acceleration * Time.deltaTime, _settings.MaximumSpeed);
+			case PlayerStates.OnGround:
+			{
+				UpdateOnGround();
+				break;
+			}
+
+			case PlayerStates.Jumping:
+			{
+				UpdateJumping();
+				break;
+			}
+
+			default:
+			{
+				Assert.That(false);
+				break;	
+			}
+		}
+	}
+		
+	#region StateUpdate
+	void UpdateOnGround()
+	{
+		Assert.That(_state == PlayerStates.OnGround);
+		Acceleration();
+	}
+
+	void UpdateJumping()
+	{
+		Assert.That(_state == PlayerStates.Jumping);
+		Acceleration();
+
+		Assert.That(_jumpForce.x == 0 && _jumpForce.z == 0);
+		Debug.Log("Translate : " + _jumpForce);
+		transform.Translate(_jumpForce * Time.deltaTime);
+		_jumpForce.y -= _settings.Gravity;
+
+		if(ReachGround())
+		{
+			transform.position = new Vector3(transform.position.x, _originalPosition.y, transform.position.y);
+			_state = PlayerStates.OnGround;
+		}
+	}
+	#endregion
+		
+	#region Jump
+	bool _jumpHolding;
+	float _jumpHoldTime;
+	Vector3 _jumpForce;
+
+	public void StartChargingJump()
+	{
+		if(_state == PlayerStates.OnGround)
+		{
+			Assert.That(!_jumpHolding);
+			_jumpHolding = true;
+			_jumpHoldTime = 0;
 		}
 	}
 
-	public void ChangeState(PlayerStates state)
+	public void ChargingJump()
 	{
-		if (_state != null)
+		if(_state == PlayerStates.OnGround && _jumpHolding)
 		{
-			_state.Stop();
+			_jumpHoldTime += Time.deltaTime;
+			if(_jumpHoldTime >= _settings.MaxJumpHoldTime)
+			{
+				Jump();
+			}
 		}
-		_state = _stateFactory.CreateState(state);
-		_state.Start();
+	}
+
+	public void EndChargingJump()
+	{
+		if(_state == PlayerStates.OnGround && _jumpHolding)
+		{
+			Jump();
+		}
+	}
+
+	public void Jump()
+	{
+		Assert.That(_state == PlayerStates.OnGround);
+		float jumpForce = 0;
+		if(_jumpHoldTime < _settings.MinJumpHoldTime)
+		{
+			jumpForce = _settings.MinJumpForce;
+		}
+		else
+		{
+			jumpForce = Math.Min(_jumpHoldTime / _settings.MaxJumpHoldTime * _settings.MaxJumpForce, _settings.MaxJumpForce);
+		}
+
+		_state = PlayerStates.Jumping;
+		_jumpHolding = false;
+		_jumpForce = new Vector3(0, jumpForce, 0);
+
+		#if DEBUG
+		Debugger.instance.UpdatePlayerJump(jumpForce);
+		#endif
+	}
+		
+	bool ReachGround()
+	{
+		return transform.position.y <= _originalPosition.y;
+	}
+	#endregion
+
+	void Acceleration()
+	{
+		if(CurrentSpeed < _settings.MaximumSpeed)
+		{
+			CurrentSpeed += _settings.Acceleration;
+			if(CurrentSpeed > _settings.MaximumSpeed)
+			{
+				CurrentSpeed = _settings.MaximumSpeed;
+			}
+		}
+			
+		Assert.That(CurrentSpeed <= _settings.MaximumSpeed);
 	}
 
 	void OnTriggerEnter2D(Collider2D other)
@@ -70,5 +184,12 @@ public class Player : MonoBehaviour
 		public float InitialSpeed;
 		public float Acceleration;
 		public float MaximumSpeed;
+
+		public float Gravity;
+
+		public float MinJumpForce;
+		public float MinJumpHoldTime;
+		public float MaxJumpForce;
+		public float MaxJumpHoldTime;
 	}
 }

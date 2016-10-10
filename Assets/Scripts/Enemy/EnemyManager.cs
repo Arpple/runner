@@ -35,7 +35,7 @@ public class EnemyManager
 	}
 
 
-	public void Start()
+	public void Initialize()
 	{
 		Assert.That(!_started);
 		_started = true;

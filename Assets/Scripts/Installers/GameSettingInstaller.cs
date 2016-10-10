@@ -19,8 +19,6 @@ public class GameSettingInstaller : ScriptableObjectInstaller
 	public override void InstallBindings()
 	{
 		Container.BindInstance(Player.Player);
-		Container.BindInstance(Player.JumpingSetting);
-		Container.BindInstance(Player.RunningSetting);
 
 		Container.BindInstance(Enemy.ManagerSetting);
 	}
@@ -30,8 +28,6 @@ public class GameSettingInstaller : ScriptableObjectInstaller
 	public class PlayerSetting
 	{
 		public Player.Settings Player;
-		public PlayerStateJumping.Settings JumpingSetting;
-		public PlayerStateRunning.Settings RunningSetting;
 	}
 
 		
