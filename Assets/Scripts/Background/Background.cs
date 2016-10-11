@@ -8,13 +8,17 @@ using ModestTree;
 public class Background : MonoBehaviour 
 {
 	//Property
-	List<SpriteRenderer> _childList;
+	List<Transform> _childList;
 	List<Vector3> _childOriginalPosition;
+
+	LevelHelper _level;
 
 	[Inject]
 	public void Construct(
+		LevelHelper level
 	)
 	{
+		_level = level;
 	}
 
 
@@ -31,35 +35,20 @@ public class Background : MonoBehaviour
 		LoopBackground();
 	}
 
+	public void Stop()
+	{
+	}
+
 
 	void GetChild()
 	{
-		_childList = new List<SpriteRenderer>();
+		_childList = new List<Transform>();
 		_childOriginalPosition = new List<Vector3>();
 
-		//1
-		for (int i = 0; i < transform.childCount; i++)
+		foreach(Transform child in transform)
 		{
-			Transform child = transform.GetChild(i);
-			SpriteRenderer r = child.GetComponent<SpriteRenderer>();
-
-			if (r != null)
-			{
-				_childList.Add(r);
-			}
+			_childList.Add(child);
 		}
-
-		//just for fun lol
-		/*Enumerable.Range(0, transform.childCount).ToList().ForEach( i => 
-		{
-				Transform child = transform.GetChild(i);
-				SpriteRenderer r = child.GetComponent<SpriteRenderer>();
-
-				if(r != null)
-				{
-					_childList.Add(r);
-				}
-		});*/
 
 		_childList = _childList.OrderBy( t => t.transform.position.x).ToList();
 		_childOriginalPosition = _childList.Select( c => c.transform.position).ToList();
@@ -82,23 +71,19 @@ public class Background : MonoBehaviour
 
 	void LoopBackground()
 	{
-		SpriteRenderer mostLeft = _childList.FirstOrDefault();
-		if(mostLeft != null)
+		Transform left = _childList.FirstOrDefault();
+		if(left.position.x < _level.Left)
 		{
-			if(mostLeft.transform.position.x < Camera.main.transform.position.x)
-			{
-				if(mostLeft.IsVisibleFrom(Camera.main) == false)
-				{
-					SpriteRenderer mostRight = _childList.LastOrDefault();
-					Vector3 rightPosition = mostRight.transform.position;
-					Vector3 rightSize = (mostRight.bounds.max - mostRight.bounds.min);
+			Transform right = _childList.LastOrDefault();
+			SpriteRenderer rightSprite = right.GetComponent<SpriteRenderer>();
 
-					mostLeft.transform.position = new Vector3(rightPosition.x + rightSize.x, mostLeft.transform.position.y, mostLeft.transform.position.z);
+			Vector3 rightPosition = right.position;
+			Vector3 rightSize = rightSprite.bounds.max - rightSprite.bounds.min;
 
-					_childList.Remove(mostLeft);
-					_childList.Add(mostLeft);
-				}
-			}
+			left.position = new Vector3(rightPosition.x + rightSize.x, left.position.y, left.position.z);
+
+			_childList.Remove(left);
+			_childList.Add(left);
 		}
 	}
 }

@@ -67,6 +67,11 @@ public class Player : MonoBehaviour
 			}
 		}
 	}
+
+	public void Stop()
+	{
+		CurrentSpeed = 0;
+	}
 		
 	#region StateUpdate
 	void UpdateOnGround()

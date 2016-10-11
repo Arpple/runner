@@ -143,7 +143,9 @@ public class GameController : IInitializable, ITickable, IDisposable
 	{
 		Assert.That(_state == GameStates.Playing);
 		_state = GameStates.GameOver;
+		_player.Stop();
 		_enemyManager.Stop();
+		_background.Stop();
 	}
 
 }
