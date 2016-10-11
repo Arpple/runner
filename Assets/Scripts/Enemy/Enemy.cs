@@ -8,6 +8,6 @@ public enum EnemyTypes
 
 public abstract class Enemy : MonoBehaviour
 {
-	public abstract void Tick();
+	public abstract void Tick(float playerSpeed);
 	public abstract void Dispose();
 }

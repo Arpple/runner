@@ -10,7 +10,6 @@ public class EnemyManager
 {
 	
 	readonly List<Enemy> _enemyList = new List<Enemy>();
-	bool _started;
 	float _spawnTime;
 	float _spawnCounter;
 		
@@ -37,8 +36,6 @@ public class EnemyManager
 
 	public void Initialize()
 	{
-		Assert.That(!_started);
-		_started = true;
 		ResetAll();
 	}
 
@@ -57,28 +54,23 @@ public class EnemyManager
 
 	public void Stop()
 	{
-		Assert.That(_started);
-		_started = false;
 	}
 
 
-	public void Tick()
+	public void Tick(float playerSpeed)
 	{
-		if(_started)
+		for(int i=0; i < _enemyList.Count ;)
 		{
-			for(int i=0; i < _enemyList.Count ;)
+			_enemyList[i].Tick(playerSpeed);
+			if(CheckDispose(_enemyList[i]))
 			{
-				_enemyList[i].Tick();
-				if(CheckDispose(_enemyList[i]))
-				{
-					_enemyList[i].Dispose();
-					_enemyList.RemoveAt(i);
-				}
-				else
-					i++;
+				_enemyList[i].Dispose();
+				_enemyList.RemoveAt(i);
 			}
-			Spawn();
+			else
+				i++;
 		}
+		Spawn();
 	}
 
 

@@ -72,7 +72,9 @@ public class Background : MonoBehaviour
 	void LoopBackground()
 	{
 		Transform left = _childList.FirstOrDefault();
-		if(left.position.x < _level.Left)
+		SpriteRenderer leftSprite = left.GetComponent<SpriteRenderer>();
+
+		if(leftSprite.bounds.max.x < _level.Left)
 		{
 			Transform right = _childList.LastOrDefault();
 			SpriteRenderer rightSprite = right.GetComponent<SpriteRenderer>();
