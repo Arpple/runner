@@ -81,7 +81,6 @@ public class Player : MonoBehaviour
 		Acceleration();
 
 		Assert.That(_jumpForce.x == 0 && _jumpForce.z == 0);
-		Debug.Log("Translate : " + _jumpForce);
 		transform.Translate(_jumpForce * Time.deltaTime);
 		_jumpForce.y -= _settings.Gravity;
 
@@ -138,7 +137,8 @@ public class Player : MonoBehaviour
 		}
 		else
 		{
-			jumpForce = Math.Min(_jumpHoldTime / _settings.MaxJumpHoldTime * _settings.MaxJumpForce, _settings.MaxJumpForce);
+			float holdRatio = (_jumpHoldTime - _settings.MinJumpHoldTime) / (_settings.MaxJumpHoldTime - _settings.MinJumpHoldTime);
+			jumpForce = Math.Min(holdRatio * (_settings.MaxJumpForce - _settings.MinJumpForce) + _settings.MinJumpForce, _settings.MaxJumpForce);
 		}
 
 		_state = PlayerStates.Jumping;

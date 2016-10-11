@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Zenject;
 using System.Linq;
+using ModestTree;
 
 public class Background : MonoBehaviour 
 {
@@ -10,31 +11,23 @@ public class Background : MonoBehaviour
 	List<SpriteRenderer> _childList;
 	List<Vector3> _childOriginalPosition;
 
-	//Dependency
-	Player _player;
-
 	[Inject]
 	public void Construct(
-		Player player
 	)
 	{
-		_player = player;
-		GetChild();
 	}
 
 
 	public void Initialize()
 	{
-		for(int i = 0; i < _childList.Count; i++)
-		{
-			_childList[i].transform.position = _childOriginalPosition[i];
-		}
+		GetChild();
+		ResetPosition();
 	}
 		
 
-	public void Tick()
+	public void Tick(float playerSpeed)
 	{
-		Move();
+		Move(playerSpeed);
 		LoopBackground();
 	}
 
@@ -44,6 +37,7 @@ public class Background : MonoBehaviour
 		_childList = new List<SpriteRenderer>();
 		_childOriginalPosition = new List<Vector3>();
 
+		//1
 		for (int i = 0; i < transform.childCount; i++)
 		{
 			Transform child = transform.GetChild(i);
@@ -54,13 +48,35 @@ public class Background : MonoBehaviour
 				_childList.Add(r);
 			}
 		}
+
+		//just for fun lol
+		/*Enumerable.Range(0, transform.childCount).ToList().ForEach( i => 
+		{
+				Transform child = transform.GetChild(i);
+				SpriteRenderer r = child.GetComponent<SpriteRenderer>();
+
+				if(r != null)
+				{
+					_childList.Add(r);
+				}
+		});*/
+
 		_childList = _childList.OrderBy( t => t.transform.position.x).ToList();
 		_childOriginalPosition = _childList.Select( c => c.transform.position).ToList();
 	}
 
-
-	void Move()
+	void ResetPosition()
 	{
+		for(int i = 0; i < _childList.Count; i++)
+		{
+			_childList[i].transform.position = _childOriginalPosition[i];
+		}
+	}
+
+
+	void Move(float playerSpeed)
+	{
+		transform.Translate(new Vector3(- playerSpeed * Time.deltaTime, 0, 0));
 	}
 
 

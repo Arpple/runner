@@ -94,7 +94,7 @@ public class GameController : IInitializable, ITickable, IDisposable
 		Assert.That(_state == GameStates.Playing);
 		_player.Tick();
 		_enemyManager.Tick();
-		_background.Tick();
+		_background.Tick(_player.CurrentSpeed);
 
 		PlayerInputUpdate();
 	}
