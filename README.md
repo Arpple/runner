@@ -4,12 +4,13 @@
 ## Progress
 - [x] main game state
 - Player
-   - [ ] running
+   - [x] running
    - [x] jumping
    - [ ] item
    - [ ] character
-- [ ] Enemy
+- [x] Enemy
 - [ ] Level Scene
 
-## Low Priority Task
+## Low Priority/Not Neccessary Task
 - fix jump logic : increase jump while jumping if holding instead => no delay feeling
+- fix update to thread instead to reduce frame range ?
