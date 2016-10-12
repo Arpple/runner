@@ -13,12 +13,16 @@ public class GameSettingInstaller : ScriptableObjectInstaller
 
 
 	public PlayerSetting Player;
+	public EquipmentSetting Equipment;
 	public EnemySeting Enemy;
 
 
 	public override void InstallBindings()
 	{
 		Container.BindInstance(Player.Player);
+
+		Container.BindInstance(Equipment.Cannon);
+		Container.BindInstance(Equipment.CannonBullet);
 
 		Container.BindInstance(Enemy.ManagerSetting);
 	}
@@ -28,6 +32,13 @@ public class GameSettingInstaller : ScriptableObjectInstaller
 	public class PlayerSetting
 	{
 		public Player.Settings Player;
+	}
+
+	[Serializable]
+	public class EquipmentSetting
+	{
+		public Cannon.Settings Cannon;
+		public CannonBullet.Settings CannonBullet;
 	}
 
 		

@@ -11,6 +11,7 @@ public class GameInstaller : MonoInstaller
     {
 		InstallMain();
 		InstallPlayer();
+		InstallWeapon();
 		InstallEnemy();
 		InstallMisc();
     }
@@ -26,6 +27,11 @@ public class GameInstaller : MonoInstaller
 	{
 		Container.BindSignal<Signals.PlayerDead>();
 		Container.BindTrigger<Signals.PlayerDead.Trigger>();
+	}
+
+	void InstallWeapon()
+	{
+		Container.BindFactory<IBullet, BulletFactory>().To<CannonBullet>().FromPrefab(_settings.WeaponSettings.CannonBulletPrefab);
 	}
 
 	void InstallEnemy()
@@ -46,11 +52,18 @@ public class GameInstaller : MonoInstaller
 	public class Settings
 	{
 		public Enemy EnemySettings;
+		public Weapon WeaponSettings;
 
 		[Serializable]
 		public class Enemy
 		{
 			public GameObject CactusPrefab;
+		}
+
+		[Serializable]
+		public class Weapon
+		{
+			public GameObject CannonBulletPrefab;
 		}
 	}
 }
