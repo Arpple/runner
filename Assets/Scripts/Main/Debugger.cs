@@ -10,15 +10,15 @@ public class Debugger : MonoBehaviour
 	[Inject(Id = "debug_speed")] Text _speedText;
 	[Inject(Id = "debug_jump")] Text _jumpText;
 
-	Player _player;
+	IRunner _runner;
 	public static Debugger instance;
 
 	[Inject]
 	public void Construct(
-		Player player
+		IRunner runner
 	)
 	{
-		_player = player;
+		_runner = runner;
 		Debugger.instance = this;
 	}
 
@@ -31,7 +31,7 @@ public class Debugger : MonoBehaviour
 
 	void UpdatePlayerSpeed()
 	{
-		_speedText.text = "speed = " + _player.CurrentSpeed.ToString();
+		_speedText.text = "speed = " + _runner.CurrentSpeed.ToString();
 	}
 
 	public void UpdatePlayerJump(float jumpPower)

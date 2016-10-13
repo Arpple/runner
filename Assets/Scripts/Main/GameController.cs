@@ -17,19 +17,19 @@ public class GameController : IInitializable, ITickable, IDisposable
 	}
 
 	//Dependency
-	readonly Player _player;
+	readonly IRunner _runner;
 	readonly EnemyManager _enemyManager;
 	readonly Signals.PlayerDead _playerDeadSignal;
 	readonly Background _background;
 
 	public GameController(
-		Player player,
+		IRunner runner,
 		Background background,
 		EnemyManager enemyManager,
 		Signals.PlayerDead playerDeadSignal
 	)
 	{
-		_player = player;
+		_runner = runner;
 		_enemyManager = enemyManager;
 		_playerDeadSignal = playerDeadSignal;
 		_background = background;
@@ -92,9 +92,9 @@ public class GameController : IInitializable, ITickable, IDisposable
 	void UpdatePlaying()
 	{
 		Assert.That(_state == GameStates.Playing);
-		_player.Tick();
-		_enemyManager.Tick(_player.CurrentSpeed);
-		_background.Tick(_player.CurrentSpeed);
+		_runner.Tick();
+		_enemyManager.Tick(_runner.CurrentSpeed);
+		_background.Tick(_runner.CurrentSpeed);
 
 		PlayerInputUpdate();
 	}
@@ -105,17 +105,17 @@ public class GameController : IInitializable, ITickable, IDisposable
 
 		if(Input.GetMouseButtonDown(0))
 		{
-			_player.StartChargingJump();
+			_runner.StartAction();
 		}
 
 		if(Input.GetMouseButton(0))
 		{
-			_player.ChargingJump();
+			_runner.HoldAction();
 		}
 
 		if(Input.GetMouseButtonUp(0))
 		{
-			_player.EndChargingJump();
+			_runner.StopAction();
 		}
 	}
 
@@ -133,7 +133,7 @@ public class GameController : IInitializable, ITickable, IDisposable
 	{
 		Assert.That(_state == GameStates.WaitingToStart || _state == GameStates.GameOver);
 		_state = GameStates.Playing;
-		_player.Initialize();
+		_runner.Initialize();
 		_enemyManager.Initialize();
 		_background.Initialize();
 	}
@@ -143,7 +143,7 @@ public class GameController : IInitializable, ITickable, IDisposable
 	{
 		Assert.That(_state == GameStates.Playing);
 		_state = GameStates.GameOver;
-		_player.Stop();
+		_runner.Stop();
 		_enemyManager.Stop();
 		_background.Stop();
 	}

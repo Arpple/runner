@@ -4,7 +4,7 @@ using Zenject;
 using System;
 using ModestTree;
 
-public class Player : MonoBehaviour 
+public class KomodoRunner : MonoBehaviour , IRunner
 {
 	public enum PlayerStates
 	{
@@ -16,24 +16,27 @@ public class Player : MonoBehaviour
 
 	Vector3 _originalPosition;
 	Signals.PlayerDead.Trigger _deadTrigger;
-	Settings _settings;
+	IRunnerSettings _settings;
 	IEquipment _weapon;
+	Animator _animator;
 
 	public float CurrentSpeed
-	{
-		get; private set;
+	{	
+		get; set;
 	}
 
 	[Inject]
 	public void Construct(
 		Signals.PlayerDead.Trigger deadTrigger,
-		Settings settings,
-		IEquipment weapon
+		IRunnerSettings settings,
+		IEquipment weapon,
+		[Inject(Id = "runner_here_animator")] Animator animator
 	)
 	{
 		_deadTrigger = deadTrigger;
 		_settings = settings;
 		_weapon = weapon;
+		_animator = animator;
 
 		_state = PlayerStates.OnGround;
 
@@ -46,6 +49,9 @@ public class Player : MonoBehaviour
 		transform.position = _originalPosition;
 		_state = PlayerStates.OnGround;
 		_weapon.Initialize();
+
+		Assert.That(_animator != null);
+		_animator.SetBool("Running", true);
 	}
 
 	public void Tick()
@@ -114,7 +120,7 @@ public class Player : MonoBehaviour
 	float _jumpHoldTime;
 	Vector3 _jumpForce;
 
-	public void StartChargingJump()
+	public void StartAction()
 	{
 		if(_state == PlayerStates.OnGround)
 		{
@@ -124,7 +130,7 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	public void ChargingJump()
+	public void HoldAction()
 	{
 		if(_state == PlayerStates.OnGround && _jumpHolding)
 		{
@@ -136,7 +142,7 @@ public class Player : MonoBehaviour
 		}
 	}
 
-	public void EndChargingJump()
+	public void StopAction()
 	{
 		if(_state == PlayerStates.OnGround && _jumpHolding)
 		{
@@ -191,22 +197,13 @@ public class Player : MonoBehaviour
 	{
 		if(other.GetComponent<Enemy>() != null)
 		{
-			_deadTrigger.Fire();
+			Dead();
 		}
 	}
 
-	[Serializable]
-	public class Settings
+	void Dead()
 	{
-		public float InitialSpeed;
-		public float Acceleration;
-		public float MaximumSpeed;
-
-		public float Gravity;
-
-		public float MinJumpForce;
-		public float MinJumpHoldTime;
-		public float MaxJumpForce;
-		public float MaxJumpHoldTime;
+		_deadTrigger.Fire();
+		_animator.SetBool("Running", false);
 	}
 }
