@@ -21,21 +21,18 @@ public class GameController : IInitializable, ITickable, IDisposable
 	readonly EnemyManager _enemyManager;
 	readonly Signals.PlayerDead _playerDeadSignal;
 	readonly Background _background;
-	readonly IEquipment _weapon;
 
 	public GameController(
 		Player player,
 		Background background,
 		EnemyManager enemyManager,
-		Signals.PlayerDead playerDeadSignal,
-		IEquipment weapon
+		Signals.PlayerDead playerDeadSignal
 	)
 	{
 		_player = player;
 		_enemyManager = enemyManager;
 		_playerDeadSignal = playerDeadSignal;
 		_background = background;
-		_weapon = weapon;
 	}
 
 
@@ -98,7 +95,6 @@ public class GameController : IInitializable, ITickable, IDisposable
 		_player.Tick();
 		_enemyManager.Tick(_player.CurrentSpeed);
 		_background.Tick(_player.CurrentSpeed);
-		_weapon.Tick();
 
 		PlayerInputUpdate();
 	}
@@ -126,7 +122,7 @@ public class GameController : IInitializable, ITickable, IDisposable
 	void UpdateGameOver()
 	{
 		Assert.That(_state == GameStates.GameOver);
-		if(Input.GetMouseButton(0))
+		if(Input.GetMouseButtonDown(0))
 		{
 			StartGame();
 		}
@@ -140,7 +136,6 @@ public class GameController : IInitializable, ITickable, IDisposable
 		_player.Initialize();
 		_enemyManager.Initialize();
 		_background.Initialize();
-		_weapon.Initialize();
 	}
 
 

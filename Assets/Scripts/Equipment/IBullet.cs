@@ -8,6 +8,7 @@ public interface IBullet
 	void Tick();
 	bool CheckDispose();
 	void Dispose();
+	void SetPosition(Vector3 position);
 }
 
 public class BulletFactory : Factory<IBullet>

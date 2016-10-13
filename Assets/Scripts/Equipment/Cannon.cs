@@ -4,6 +4,7 @@ using System;
 using Zenject;
 using System.Collections.Generic;
 using System.Linq;
+using ModestTree;
 
 public class Cannon : MonoBehaviour, IEquipment
 {
@@ -36,6 +37,8 @@ public class Cannon : MonoBehaviour, IEquipment
 
 	public void Tick()
 	{
+		Assert.That(_bullets != null);
+
 		_coolDownCounter -= Time.deltaTime;
 		if(_coolDownCounter <= 0)
 		{
@@ -56,9 +59,13 @@ public class Cannon : MonoBehaviour, IEquipment
 
 	public void Activate()
 	{
+		Assert.That(_bullets != null);
+
 		IBullet bullet = _bulletFactory.Create();
 		bullet.Initialize(this);
+		bullet.SetPosition(transform.position);
 		_bullets.Add(bullet);
+
 	}
 
 	public Vector3 GetSpawnPosition()

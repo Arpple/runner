@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
 	Vector3 _originalPosition;
 	Signals.PlayerDead.Trigger _deadTrigger;
 	Settings _settings;
+	IEquipment _weapon;
 
 	public float CurrentSpeed
 	{
@@ -26,11 +27,13 @@ public class Player : MonoBehaviour
 	[Inject]
 	public void Construct(
 		Signals.PlayerDead.Trigger deadTrigger,
-		Settings settings
+		Settings settings,
+		IEquipment weapon
 	)
 	{
 		_deadTrigger = deadTrigger;
 		_settings = settings;
+		_weapon = weapon;
 
 		_state = PlayerStates.OnGround;
 
@@ -42,10 +45,25 @@ public class Player : MonoBehaviour
 		CurrentSpeed = _settings.InitialSpeed;
 		transform.position = _originalPosition;
 		_state = PlayerStates.OnGround;
+		_weapon.Initialize();
 	}
 
 	public void Tick()
 	{
+		UpdatePlayer();
+		_weapon.Tick();
+	}
+
+	public void Stop()
+	{
+		CurrentSpeed = 0;
+	}
+		
+	#region PlayerStateUpdate
+
+	void UpdatePlayer()
+	{
+		Assert.That(_state != null);
 		switch(_state)
 		{
 			case PlayerStates.OnGround:
@@ -65,15 +83,9 @@ public class Player : MonoBehaviour
 				Assert.That(false);
 				break;	
 			}
-		}
+		}	
 	}
 
-	public void Stop()
-	{
-		CurrentSpeed = 0;
-	}
-		
-	#region StateUpdate
 	void UpdateOnGround()
 	{
 		Assert.That(_state == PlayerStates.OnGround);

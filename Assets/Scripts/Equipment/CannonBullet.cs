@@ -19,8 +19,12 @@ public class CannonBullet : MonoBehaviour, IBullet
 
 	public void Initialize(IEquipment weapon)
 	{
-		transform.position = weapon.GetSpawnPosition();
 		_lifeTimeCounter = _settings.LifeTime;
+	}
+
+	public void SetPosition(Vector3 position)
+	{
+		transform.position = position;
 	}
 
 	public void Tick()
