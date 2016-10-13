@@ -14,3 +14,7 @@
 ## Low Priority/Not Neccessary Task
 - fix jump logic : increase jump while jumping if holding instead => no delay feeling
 - fix update to thread instead to reduce frame range ?
+
+## Tools
+- Unity 5.3.5
+   + Asset : Zenject IOC
