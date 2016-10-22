@@ -2,6 +2,11 @@ using UnityEngine;
 using Zenject;
 using System;
 
+public enum CoreObject
+{
+	Player,
+}
+
 public class GameInstaller : MonoInstaller
 {
 	[SerializeField]
@@ -10,7 +15,7 @@ public class GameInstaller : MonoInstaller
     public override void InstallBindings()
     {
 		InstallMain();
-		InstallPlayer();
+		InstallRunner();
 		InstallWeapon();
 		InstallEnemy();
 		InstallMisc();
@@ -23,7 +28,7 @@ public class GameInstaller : MonoInstaller
 		Container.Bind<IDisposable>().To<GameController>().AsSingle();
 	}
 
-	void InstallPlayer()
+	void InstallRunner()
 	{
 		Container.BindSignal<Signals.PlayerDead>();
 		Container.BindTrigger<Signals.PlayerDead.Trigger>();
@@ -51,6 +56,8 @@ public class GameInstaller : MonoInstaller
 	[Serializable]
 	public class Settings
 	{
+		public GameObject DefaultRunner;
+
 		public Enemy EnemySettings;
 		public Weapon WeaponSettings;
 

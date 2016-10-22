@@ -29,14 +29,13 @@ public class KomodoRunner : MonoBehaviour , IRunner
 	public void Construct(
 		Signals.PlayerDead.Trigger deadTrigger,
 		IRunnerSettings settings,
-		IEquipment weapon,
-		[Inject(Id = "runner_here_animator")] Animator animator
+		IEquipment weapon
 	)
 	{
 		_deadTrigger = deadTrigger;
 		_settings = settings;
 		_weapon = weapon;
-		_animator = animator;
+		_animator = GetComponentInChildren<Animator>();
 
 		_state = PlayerStates.OnGround;
 

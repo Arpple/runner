@@ -6,6 +6,8 @@ using ModestTree;
 
 public class GreyRunner : MonoBehaviour , IRunner
 {
+	[InjectOptional(Id = "runner_container")] GameObject Container;
+
 	public enum PlayerStates
 	{
 		OnGround,
@@ -42,6 +44,9 @@ public class GreyRunner : MonoBehaviour , IRunner
 
 	public void Initialize()
 	{
+		if(Container != null)
+			transform.SetParent(Container.transform);
+
 		CurrentSpeed = _settings.InitialSpeed;
 		transform.position = _originalPosition;
 		_state = PlayerStates.OnGround;
