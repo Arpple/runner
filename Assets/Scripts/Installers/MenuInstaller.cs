@@ -3,8 +3,10 @@ using Zenject;
 
 public class MenuInstaller : MonoInstaller
 {
+	public GameDatabase database;
+
     public override void InstallBindings()
     {
-		//Container.Bind<ZenjectSceneLoader>().AsSingle();
+		Container.BindInstance(database).AsSingle();
     }
 }

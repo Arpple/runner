@@ -2,6 +2,7 @@ using UnityEngine;
 using Zenject;
 using System;
 using UnityEditor;
+using System.Collections.Generic;
 
 public class GameSettingInstaller : ScriptableObjectInstaller
 {
@@ -15,6 +16,8 @@ public class GameSettingInstaller : ScriptableObjectInstaller
 	public RunnerSettings Runner;
 	public EquipmentSetting Equipment;
 	public EnemySeting Enemy;
+
+	public List<GameObject> RunnerList;
 
 
 	public override void InstallBindings()
