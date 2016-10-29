@@ -17,9 +17,6 @@ public class GameSettingInstaller : ScriptableObjectInstaller
 	public EquipmentSetting Equipment;
 	public EnemySeting Enemy;
 
-	public List<GameObject> RunnerList;
-
-
 	public override void InstallBindings()
 	{
 		Container.BindInstance(Runner.Runner);

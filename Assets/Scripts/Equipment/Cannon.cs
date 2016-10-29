@@ -37,7 +37,7 @@ public class Cannon : MonoBehaviour, IEquipment
 
 	public void Tick()
 	{
-		Assert.That(_bullets != null);
+		Assert.That(_bullets != null, "Bullet is not set");
 
 		_coolDownCounter -= Time.deltaTime;
 		if(_coolDownCounter <= 0)
@@ -59,7 +59,7 @@ public class Cannon : MonoBehaviour, IEquipment
 
 	public void Activate()
 	{
-		Assert.That(_bullets != null);
+		Assert.That(_bullets != null, "Bullet is not set");
 
 		IBullet bullet = _bulletFactory.Create();
 		bullet.Initialize(this);

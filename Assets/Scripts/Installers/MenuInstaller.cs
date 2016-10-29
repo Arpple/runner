@@ -1,5 +1,6 @@
 using UnityEngine;
 using Zenject;
+using ModestTree;
 
 public class MenuInstaller : MonoInstaller
 {
@@ -7,6 +8,8 @@ public class MenuInstaller : MonoInstaller
 
     public override void InstallBindings()
     {
+		Assert.That(database != null, "Database is not set");
+
 		Container.BindInstance(database).AsSingle();
     }
 }

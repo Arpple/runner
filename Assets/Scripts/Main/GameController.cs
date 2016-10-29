@@ -6,6 +6,7 @@ using ModestTree;
 
 public class GameController : IInitializable, ITickable, IDisposable
 {
+
 	//Property
 	GameStates _state = GameStates.WaitingToStart;
 	[InjectOptional(Id = "runner_container")] GameObject RunnerContainer;

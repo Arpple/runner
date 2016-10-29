@@ -1,6 +1,7 @@
 using UnityEngine;
 using Zenject;
 using System;
+using ModestTree;
 
 public enum CoreObject
 {
@@ -11,6 +12,8 @@ public class GameInstaller : MonoInstaller
 {
 	[SerializeField]
 	Settings _settings = null;
+
+	[InjectOptional(Id = "GameInstaller_Runner")] GameObject _runner;
 
     public override void InstallBindings()
     {
@@ -32,6 +35,17 @@ public class GameInstaller : MonoInstaller
 	{
 		Container.BindSignal<Signals.PlayerDead>();
 		Container.BindTrigger<Signals.PlayerDead.Trigger>();
+		if(_runner != null)
+		{
+			Debug.Log("Runner Loaded : " + _runner);
+			Container.Bind<IRunner>().FromPrefab(_runner).AsSingle().WhenNotInjectedInto<GameInstaller>();
+		}
+		else
+		{
+			Debug.Log("Runner Not Loaded : default loaded ");
+			Assert.That(_settings.DefaultRunner!= null, "Default Runner is not set");
+			Container.Bind<IRunner>().FromPrefab(_settings.DefaultRunner).AsSingle().WhenNotInjectedInto<GameInstaller>();
+		}
 	}
 
 	void InstallWeapon()
