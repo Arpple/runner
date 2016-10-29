@@ -3,13 +3,12 @@
 
 ## Progress
 - [x] main game state
-- Player
-   - [x] running
-   - [x] jumping
-   - [ ] item
-   - [ ] character
-- [x] Enemy
-- [ ] Level Scene
+- [x] interface
+   + [ ] customize
+- [ ] Runner 2/3
+- [ ] Equipment 1/3
+- [ ] Level 1/x
+- [ ] Enemy 1/x
 
 ## Low Priority/Not Neccessary Task
 - fix jump logic : increase jump while jumping if holding instead => no delay feeling
@@ -18,3 +17,5 @@
 ## Tools
 - Unity 5.3.5
    + Asset : Zenject IOC
+- MonoDevelop-Unity 5.9.6
+
