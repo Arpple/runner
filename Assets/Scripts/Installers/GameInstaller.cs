@@ -63,6 +63,7 @@ public class GameInstaller : MonoInstaller
 
 	void InstallMisc()
 	{
+		Container.Bind<ScoreManager>().AsSingle();
 		Container.Bind<LevelHelper>().AsSingle();
 		Container.Bind<Debugger>().AsSingle();
 	}
