@@ -30,11 +30,20 @@ public class EquipmentSelector
 			equipmentObject => 
 			{
 				GameObject selectorObject = (GameObject)GameObject.Instantiate(dataBase.Selector);
-				selectorObject.name = equipmentObject.name;
-				selectorObject.GetComponentInChildren<Text>().text = equipmentObject.name;
-				selectorObject.transform.SetParent(ListContainer, false);
+				string name;
 				Selector selector = selectorObject.GetComponent<Selector>();
 				selector.OnSelected = () => SetEquipment(equipmentObject);
+				if(equipmentObject != null)
+				{
+					name = equipmentObject.name;
+				}
+				else
+				{
+					name = "None";
+				}
+				selectorObject.name = name;
+				selectorObject.GetComponentInChildren<Text>().text = name;
+				selectorObject.transform.SetParent(ListContainer, false);
 				List.Add(selectorObject);
 			});
 
@@ -45,7 +54,10 @@ public class EquipmentSelector
 	void SetEquipment(GameObject equipment)
 	{
 		Selected = equipment;
-		Text.text = "Equipment Selected : \n" + equipment.name;
-		Debug.Log("Equipment Selected : " + equipment);
+		string name = "None";
+		if(equipment != null)
+			name = equipment.name;
+		Text.text = "Equipment Selected : \n" + name;
+		Debug.Log("Equipment Selected : " + name);
 	}
 }

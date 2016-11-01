@@ -29,7 +29,7 @@ public class KomodoRunner : MonoBehaviour , IRunner
 	public void Construct(
 		Signals.PlayerDead.Trigger deadTrigger,
 		IRunnerSettings settings,
-		IEquipment weapon
+		[InjectOptional] IEquipment weapon
 	)
 	{
 		_deadTrigger = deadTrigger;
@@ -47,7 +47,8 @@ public class KomodoRunner : MonoBehaviour , IRunner
 		CurrentSpeed = _settings.InitialSpeed;
 		transform.position = _originalPosition;
 		_state = PlayerStates.OnGround;
-		_weapon.Initialize();
+		if(_weapon != null)
+			_weapon.Initialize();
 
 		Assert.That(_animator != null);
 		_animator.SetBool("Running", true);
@@ -56,7 +57,8 @@ public class KomodoRunner : MonoBehaviour , IRunner
 	public void Tick()
 	{
 		UpdatePlayer();
-		_weapon.Tick();
+		if(_weapon != null)
+			_weapon.Tick();
 	}
 
 	public void Stop()

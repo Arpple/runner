@@ -19,7 +19,7 @@ public class GreyRunner : MonoBehaviour , IRunner
 	Vector3 _originalPosition;
 	Signals.PlayerDead.Trigger _deadTrigger;
 	IRunnerSettings _settings;
-	IEquipment _weapon;
+	[InjectOptional] IEquipment _weapon;
 
 	public float CurrentSpeed
 	{	
@@ -29,13 +29,11 @@ public class GreyRunner : MonoBehaviour , IRunner
 	[Inject]
 	public void Construct(
 		Signals.PlayerDead.Trigger deadTrigger,
-		IRunnerSettings settings,
-		IEquipment weapon
+		IRunnerSettings settings
 	)
 	{
 		_deadTrigger = deadTrigger;
 		_settings = settings;
-		_weapon = weapon;
 
 		_state = PlayerStates.OnGround;
 
@@ -50,13 +48,15 @@ public class GreyRunner : MonoBehaviour , IRunner
 		CurrentSpeed = _settings.InitialSpeed;
 		transform.position = _originalPosition;
 		_state = PlayerStates.OnGround;
-		_weapon.Initialize();
+		if(_weapon != null)
+			_weapon.Initialize();
 	}
 
 	public void Tick()
 	{
 		UpdatePlayer();
-		_weapon.Tick();
+		if(_weapon != null)
+			_weapon.Tick();
 	}
 
 	public void Stop()

@@ -42,7 +42,6 @@ public class MenuController : MonoBehaviour, IInitializable
 	public void StartGame()
 	{
 		if(_runner.Selected == null
-			|| _equipment.Selected == null
 		)
 		{
 			return;
@@ -51,9 +50,9 @@ public class MenuController : MonoBehaviour, IInitializable
 		_sceneLoader.LoadScene("main", 
 			(container) => 
 			{
-				Debug.Log("Inject : " + _runner.Selected);
 				container.Bind<GameObject>().WithId("GameInstaller_Runner").FromInstance(_runner.Selected).AsSingle().WhenInjectedInto<GameInstaller>();
-				container.Bind<GameObject>().WithId("GameInstaller_Equipment").FromInstance(_equipment.Selected).AsSingle().WhenInjectedInto<GameInstaller>();
+				if(_equipment.Selected != null)
+					container.Bind<GameObject>().WithId("GameInstaller_Equipment").FromInstance(_equipment.Selected).WhenInjectedInto<GameInstaller>();
 			});
 	}
 }

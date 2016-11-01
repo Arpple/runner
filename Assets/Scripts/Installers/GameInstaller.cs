@@ -51,18 +51,16 @@ public class GameInstaller : MonoInstaller
 
 	void InstallWeapon()
 	{
+		Container.BindFactory<IBullet, BulletFactory>().To<CannonBullet>().FromPrefab(_settings.WeaponSettings.CannonBulletPrefab);
 		if(_equipment != null)
 		{
 			Debug.Log("Equipment Loaded : " + _equipment);
-			Container.Bind<IEquipment>().FromPrefab(_equipment).AsSingle().WhenNotInjectedInto<GameInstaller>();
+			Container.Bind<IEquipment>().FromPrefab(_equipment).WhenNotInjectedInto<GameInstaller>();
 		}
 		else
 		{
 			Debug.Log("Equipment Not Loaded : default loaded ");
-			Assert.That(_settings.DefaultEquipment!= null, "Default Equipment is not set");
-			Container.Bind<IEquipment>().FromPrefab(_settings.DefaultEquipment).AsSingle().WhenNotInjectedInto<GameInstaller>();
 		}
-		Container.BindFactory<IBullet, BulletFactory>().To<CannonBullet>().FromPrefab(_settings.WeaponSettings.CannonBulletPrefab);
 	}
 
 	void InstallEnemy()
