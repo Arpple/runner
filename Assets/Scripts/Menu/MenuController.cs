@@ -21,69 +21,39 @@ public class MenuController : MonoBehaviour, IInitializable
 	}
 
 	RunnerSelector _runner;
-	class RunnerSelector
-	{
-		public List<GameObject> List;
-		public GameObject Selected;
-		public Text Text;
-
-		public Transform Main;
-		public Transform ListContainer;
-
-		public RunnerSelector(Transform menu)
-		{
-			Main = menu.Find("Runner");
-			ListContainer = Main.Find("List");
-			Text = Main.Find("Text").GetComponent<Text>();
-		}
-	}
-		
-	public void SetRunner(GameObject runner)
-	{
-		_runner.Selected = runner;
-		_runner.Text.text = "Runner Selected : \n" + runner.name;
-		Debug.Log("Runner Selected : " + runner);
-	}
+	EquipmentSelector _equipment;
 
 	public void Initialize()
 	{
 		Debug.Log("Menu Initializing");
-		CreateRunnerSelectors();
-	}
 
-	public void CreateRunnerSelectors()
-	{
-		Assert.That(_dataBase != null);
+		//Create Runner
+		Assert.That(_dataBase.RunnerList.Count > 0, "Runner database not set");
 		_runner = new RunnerSelector(transform);
+		_runner.Initialize(_dataBase);
 
-		_runner.List = new List<GameObject>();
-			
-		_dataBase.RunnerList.ForEach( 
-			runnerObject => 
-			{
-				GameObject selectorObject = (GameObject)Instantiate(_dataBase.Selector);
-				selectorObject.name = runnerObject.name;
-				selectorObject.GetComponentInChildren<Text>().text = runnerObject.name;
-				selectorObject.transform.SetParent(_runner.ListContainer, false);
-				Selector selector = selectorObject.GetComponent<Selector>();
-				selector.OnSelected = () => SetRunner(runnerObject);
-				_runner.List.Add(selectorObject);
-			});
-
-		Cycler cycler = _runner.Main.GetComponentInChildren<Cycler>();
-		cycler.SetCyclingList(_runner.List);
+		//Create Equipment
+		Assert.That(_dataBase.EquipmentList.Count > 0, "Equipment database not set");
+		_equipment = new EquipmentSelector(transform);
+		_equipment.Initialize(_dataBase);
 	}
+
 
 	public void StartGame()
 	{
-		if(_runner.Selected == null)
+		if(_runner.Selected == null
+			|| _equipment.Selected == null
+		)
+		{
 			return;
+		}
 		
 		_sceneLoader.LoadScene("main", 
 			(container) => 
 			{
 				Debug.Log("Inject : " + _runner.Selected);
 				container.Bind<GameObject>().WithId("GameInstaller_Runner").FromInstance(_runner.Selected).AsSingle().WhenInjectedInto<GameInstaller>();
+				container.Bind<GameObject>().WithId("GameInstaller_Equipment").FromInstance(_equipment.Selected).AsSingle().WhenInjectedInto<GameInstaller>();
 			});
 	}
 }

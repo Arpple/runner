@@ -14,6 +14,7 @@ public class GameInstaller : MonoInstaller
 	Settings _settings = null;
 
 	[InjectOptional(Id = "GameInstaller_Runner")] GameObject _runner;
+	[InjectOptional(Id = "GameInstaller_Equipment")] GameObject _equipment;
 
     public override void InstallBindings()
     {
@@ -50,6 +51,17 @@ public class GameInstaller : MonoInstaller
 
 	void InstallWeapon()
 	{
+		if(_equipment != null)
+		{
+			Debug.Log("Equipment Loaded : " + _equipment);
+			Container.Bind<IEquipment>().FromPrefab(_equipment).AsSingle().WhenNotInjectedInto<GameInstaller>();
+		}
+		else
+		{
+			Debug.Log("Equipment Not Loaded : default loaded ");
+			Assert.That(_settings.DefaultEquipment!= null, "Default Equipment is not set");
+			Container.Bind<IEquipment>().FromPrefab(_settings.DefaultEquipment).AsSingle().WhenNotInjectedInto<GameInstaller>();
+		}
 		Container.BindFactory<IBullet, BulletFactory>().To<CannonBullet>().FromPrefab(_settings.WeaponSettings.CannonBulletPrefab);
 	}
 
@@ -72,6 +84,7 @@ public class GameInstaller : MonoInstaller
 	public class Settings
 	{
 		public GameObject DefaultRunner;
+		public GameObject DefaultEquipment;
 
 		public Enemy EnemySettings;
 		public Weapon WeaponSettings;
