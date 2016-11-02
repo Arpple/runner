@@ -6,6 +6,8 @@ using ModestTree;
 
 public class GreyRunner : MonoBehaviour , IRunner
 {
+	public IRunnerSettings Setting;
+
 	[InjectOptional(Id = "runner_container")] GameObject Container;
 
 	public enum PlayerStates
@@ -18,7 +20,6 @@ public class GreyRunner : MonoBehaviour , IRunner
 
 	Vector3 _originalPosition;
 	Signals.PlayerDead.Trigger _deadTrigger;
-	IRunnerSettings _settings;
 	[InjectOptional] IEquipment _weapon;
 
 	public float CurrentSpeed
@@ -28,13 +29,10 @@ public class GreyRunner : MonoBehaviour , IRunner
 
 	[Inject]
 	public void Construct(
-		Signals.PlayerDead.Trigger deadTrigger,
-		IRunnerSettings settings
+		Signals.PlayerDead.Trigger deadTrigger
 	)
 	{
 		_deadTrigger = deadTrigger;
-		_settings = settings;
-
 		_state = PlayerStates.OnGround;
 
 		_originalPosition = transform.position;
@@ -45,7 +43,7 @@ public class GreyRunner : MonoBehaviour , IRunner
 		if(Container != null)
 			transform.SetParent(Container.transform);
 
-		CurrentSpeed = _settings.InitialSpeed;
+		CurrentSpeed = Setting.InitialSpeed;
 		transform.position = _originalPosition;
 		_state = PlayerStates.OnGround;
 		if(_weapon != null)
@@ -68,7 +66,6 @@ public class GreyRunner : MonoBehaviour , IRunner
 
 	void UpdatePlayer()
 	{
-		Assert.That(_state != null);
 		switch(_state)
 		{
 			case PlayerStates.OnGround:
@@ -85,7 +82,7 @@ public class GreyRunner : MonoBehaviour , IRunner
 
 			default:
 			{
-				Assert.That(false);
+				Assert.That(false, "Undefine state");
 				break;	
 			}
 		}	
@@ -93,18 +90,18 @@ public class GreyRunner : MonoBehaviour , IRunner
 
 	void UpdateOnGround()
 	{
-		Assert.That(_state == PlayerStates.OnGround);
+		Assert.That(_state == PlayerStates.OnGround, "wrong state update");
 		Acceleration();
 	}
 
 	void UpdateJumping()
 	{
-		Assert.That(_state == PlayerStates.Jumping);
+		Assert.That(_state == PlayerStates.Jumping, "wrong state update");
 		Acceleration();
 
-		Assert.That(_jumpForce.x == 0 && _jumpForce.z == 0);
+		Assert.That(_jumpForce.x == 0 && _jumpForce.z == 0, "jump force not y-axis");
 		transform.Translate(_jumpForce * Time.deltaTime);
-		_jumpForce.y -= _settings.Gravity;
+		_jumpForce.y -= Setting.Gravity;
 
 		if(ReachGround())
 		{
@@ -134,7 +131,7 @@ public class GreyRunner : MonoBehaviour , IRunner
 		if(_state == PlayerStates.OnGround && _jumpHolding)
 		{
 			_jumpHoldTime += Time.deltaTime;
-			if(_jumpHoldTime >= _settings.MaxJumpHoldTime)
+			if(_jumpHoldTime >= Setting.MaxJumpHoldTime)
 			{
 				Jump();
 			}
@@ -153,14 +150,14 @@ public class GreyRunner : MonoBehaviour , IRunner
 	{
 		Assert.That(_state == PlayerStates.OnGround);
 		float jumpForce = 0;
-		if(_jumpHoldTime < _settings.MinJumpHoldTime)
+		if(_jumpHoldTime < Setting.MinJumpHoldTime)
 		{
-			jumpForce = _settings.MinJumpForce;
+			jumpForce = Setting.MinJumpForce;
 		}
 		else
 		{
-			float holdRatio = (_jumpHoldTime - _settings.MinJumpHoldTime) / (_settings.MaxJumpHoldTime - _settings.MinJumpHoldTime);
-			jumpForce = Math.Min(holdRatio * (_settings.MaxJumpForce - _settings.MinJumpForce) + _settings.MinJumpForce, _settings.MaxJumpForce);
+			float holdRatio = (_jumpHoldTime - Setting.MinJumpHoldTime) / (Setting.MaxJumpHoldTime - Setting.MinJumpHoldTime);
+			jumpForce = Math.Min(holdRatio * (Setting.MaxJumpForce - Setting.MinJumpForce) + Setting.MinJumpForce, Setting.MaxJumpForce);
 		}
 
 		_state = PlayerStates.Jumping;
@@ -180,16 +177,16 @@ public class GreyRunner : MonoBehaviour , IRunner
 
 	void Acceleration()
 	{
-		if(CurrentSpeed < _settings.MaximumSpeed)
+		if(CurrentSpeed < Setting.MaximumSpeed)
 		{
-			CurrentSpeed += _settings.Acceleration;
-			if(CurrentSpeed > _settings.MaximumSpeed)
+			CurrentSpeed += Setting.Acceleration;
+			if(CurrentSpeed > Setting.MaximumSpeed)
 			{
-				CurrentSpeed = _settings.MaximumSpeed;
+				CurrentSpeed = Setting.MaximumSpeed;
 			}
 		}
 			
-		Assert.That(CurrentSpeed <= _settings.MaximumSpeed);
+		Assert.That(CurrentSpeed <= Setting.MaximumSpeed, "Speed exceed maximum");
 	}
 
 	void OnTriggerEnter2D(Collider2D other)

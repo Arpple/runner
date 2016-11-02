@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public interface IRunner
 {
@@ -15,9 +18,18 @@ public interface IRunner
 	void StopAction();
 }
 
+
 [Serializable]
-public class IRunnerSettings
+public class IRunnerSettings : ScriptableObject
 {
+	#if UNITY_EDITOR
+	[MenuItem("Assets/Create/ScriptableObject/IRunnerSetting")]
+	public static void CreateAsset ()
+	{
+		ScriptableObjectUtility.CreateAsset<IRunnerSettings>();
+	}
+	#endif
+
 	public float InitialSpeed;
 	public float Acceleration;
 	public float MaximumSpeed;

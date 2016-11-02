@@ -6,6 +6,8 @@ using ModestTree;
 
 public class KomodoRunner : MonoBehaviour , IRunner
 {
+	public IRunnerSettings Setting;
+
 	public enum PlayerStates
 	{
 		OnGround,
@@ -16,7 +18,6 @@ public class KomodoRunner : MonoBehaviour , IRunner
 
 	Vector3 _originalPosition;
 	Signals.PlayerDead.Trigger _deadTrigger;
-	IRunnerSettings _settings;
 	IEquipment _weapon;
 	Animator _animator;
 
@@ -28,12 +29,10 @@ public class KomodoRunner : MonoBehaviour , IRunner
 	[Inject]
 	public void Construct(
 		Signals.PlayerDead.Trigger deadTrigger,
-		IRunnerSettings settings,
 		[InjectOptional] IEquipment weapon
 	)
 	{
 		_deadTrigger = deadTrigger;
-		_settings = settings;
 		_weapon = weapon;
 		_animator = GetComponentInChildren<Animator>();
 
@@ -44,7 +43,7 @@ public class KomodoRunner : MonoBehaviour , IRunner
 
 	public void Initialize()
 	{
-		CurrentSpeed = _settings.InitialSpeed;
+		CurrentSpeed = Setting.InitialSpeed;
 		transform.position = _originalPosition;
 		_state = PlayerStates.OnGround;
 		if(_weapon != null)
@@ -70,7 +69,6 @@ public class KomodoRunner : MonoBehaviour , IRunner
 
 	void UpdatePlayer()
 	{
-		Assert.That(_state != null);
 		switch(_state)
 		{
 			case PlayerStates.OnGround:
@@ -106,7 +104,7 @@ public class KomodoRunner : MonoBehaviour , IRunner
 
 		Assert.That(_jumpForce.x == 0 && _jumpForce.z == 0);
 		transform.Translate(_jumpForce * Time.deltaTime);
-		_jumpForce.y -= _settings.Gravity;
+		_jumpForce.y -= Setting.Gravity;
 
 		if(ReachGround())
 		{
@@ -136,7 +134,7 @@ public class KomodoRunner : MonoBehaviour , IRunner
 		if(_state == PlayerStates.OnGround && _jumpHolding)
 		{
 			_jumpHoldTime += Time.deltaTime;
-			if(_jumpHoldTime >= _settings.MaxJumpHoldTime)
+			if(_jumpHoldTime >= Setting.MaxJumpHoldTime)
 			{
 				Jump();
 			}
@@ -155,14 +153,14 @@ public class KomodoRunner : MonoBehaviour , IRunner
 	{
 		Assert.That(_state == PlayerStates.OnGround);
 		float jumpForce = 0;
-		if(_jumpHoldTime < _settings.MinJumpHoldTime)
+		if(_jumpHoldTime < Setting.MinJumpHoldTime)
 		{
-			jumpForce = _settings.MinJumpForce;
+			jumpForce = Setting.MinJumpForce;
 		}
 		else
 		{
-			float holdRatio = (_jumpHoldTime - _settings.MinJumpHoldTime) / (_settings.MaxJumpHoldTime - _settings.MinJumpHoldTime);
-			jumpForce = Math.Min(holdRatio * (_settings.MaxJumpForce - _settings.MinJumpForce) + _settings.MinJumpForce, _settings.MaxJumpForce);
+			float holdRatio = (_jumpHoldTime - Setting.MinJumpHoldTime) / (Setting.MaxJumpHoldTime - Setting.MinJumpHoldTime);
+			jumpForce = Math.Min(holdRatio * (Setting.MaxJumpForce - Setting.MinJumpForce) + Setting.MinJumpForce, Setting.MaxJumpForce);
 		}
 
 		_state = PlayerStates.Jumping;
@@ -182,16 +180,16 @@ public class KomodoRunner : MonoBehaviour , IRunner
 
 	void Acceleration()
 	{
-		if(CurrentSpeed < _settings.MaximumSpeed)
+		if(CurrentSpeed < Setting.MaximumSpeed)
 		{
-			CurrentSpeed += _settings.Acceleration;
-			if(CurrentSpeed > _settings.MaximumSpeed)
+			CurrentSpeed += Setting.Acceleration;
+			if(CurrentSpeed > Setting.MaximumSpeed)
 			{
-				CurrentSpeed = _settings.MaximumSpeed;
+				CurrentSpeed = Setting.MaximumSpeed;
 			}
 		}
 			
-		Assert.That(CurrentSpeed <= _settings.MaximumSpeed);
+		Assert.That(CurrentSpeed <= Setting.MaximumSpeed);
 	}
 
 	void OnTriggerEnter2D(Collider2D other)
