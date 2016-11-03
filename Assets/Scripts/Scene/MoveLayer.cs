@@ -47,6 +47,19 @@ public class MoveLayer : MonoBehaviour, IMovableScene
 		}
 
 		_childList = _childList.OrderBy( child => child.transform.position.x).ToList();
+
+		//remove gap
+		Transform leftObj = _childList.FirstOrDefault();
+
+		foreach(Transform child in _childList.Skip(1))
+		{
+			SpriteRenderer leftObjSprite = leftObj.GetComponent<SpriteRenderer>();
+			Vector3 leftObjPosition = leftObj.position;
+			Vector3 leftObjSize = leftObjSprite.bounds.max - leftObjSprite.bounds.min;
+			child.position = new Vector3(leftObjPosition.x + leftObjSize.x,leftObjPosition.y, leftObjPosition.z);
+
+			leftObj = child;
+		}
 		_childOriginalPositionList = _childList.Select( child => child.transform.position).ToList();
 	}
 

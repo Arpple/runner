@@ -1,29 +1,28 @@
 ﻿using UnityEngine;
 using System.Collections;
 using ModestTree;
+using System.Collections.Generic;
 
 public class GameScene : MonoBehaviour
 {
 	public StaticLayer BackgroundObj;
-	public MoveLayer ForegroundObj;
+	public List<MoveLayer> MoveLayerList;
 
 	public void Initialize()
 	{
-		Assert.That(BackgroundObj != null && ForegroundObj != null, "BG-FG object not set");
-
 		BackgroundObj.Initialize();
-		ForegroundObj.Initialize();
+		MoveLayerList.ForEach(moveLayer => moveLayer.Initialize());
 	}
 
 	public void Tick(float playerSpeed)
 	{
 		BackgroundObj.Tick();
-		ForegroundObj.Tick(playerSpeed);
+		MoveLayerList.ForEach(moveLayer => moveLayer.Tick(playerSpeed));
 	}
 
 	public void Stop()
 	{
 		BackgroundObj.Stop();
-		ForegroundObj.Stop();
+		MoveLayerList.ForEach(moveLayer => moveLayer.Stop());
 	}
 }
