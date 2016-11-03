@@ -22,12 +22,10 @@ public class GameController : IInitializable, ITickable, IDisposable
 	readonly IRunner _runner;
 	readonly EnemyManager _enemyManager;
 	readonly Signals.PlayerDead _playerDeadSignal;
-	readonly Background _background;
 	readonly ScoreManager _score;
 
 	public GameController(
 		IRunner runner,
-		Background background,
 		EnemyManager enemyManager,
 		Signals.PlayerDead playerDeadSignal,
 		ScoreManager score
@@ -36,7 +34,6 @@ public class GameController : IInitializable, ITickable, IDisposable
 		_runner = runner;
 		_enemyManager = enemyManager;
 		_playerDeadSignal = playerDeadSignal;
-		_background = background;
 		_score = score;
 	}
 
@@ -99,7 +96,6 @@ public class GameController : IInitializable, ITickable, IDisposable
 		Assert.That(_state == GameStates.Playing);
 		_runner.Tick();
 		_enemyManager.Tick(_runner.CurrentSpeed);
-		_background.Tick(_runner.CurrentSpeed);
 		_score.Tick(_runner.CurrentSpeed);
 
 		PlayerInputUpdate();
@@ -141,7 +137,6 @@ public class GameController : IInitializable, ITickable, IDisposable
 		_state = GameStates.Playing;
 		_runner.Initialize();
 		_enemyManager.Initialize();
-		_background.Initialize();
 		_score.Initialize();
 	}
 
@@ -152,7 +147,6 @@ public class GameController : IInitializable, ITickable, IDisposable
 		_state = GameStates.GameOver;
 		_runner.Stop();
 		_enemyManager.Stop();
-		_background.Stop();
 		_score.NewScore();
 	}
 

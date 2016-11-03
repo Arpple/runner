@@ -5,7 +5,7 @@ using Zenject;
 using System.Linq;
 using ModestTree;
 
-public class Background : MonoBehaviour 
+public class Background : MonoBehaviour
 {
 	//Property
 	List<Transform> _childList;
@@ -24,8 +24,23 @@ public class Background : MonoBehaviour
 
 	public void Initialize()
 	{
-		GetChild();
-		ResetPosition();
+		// get child
+		_childList = new List<Transform>();
+		_childOriginalPosition = new List<Vector3>();
+
+		foreach(Transform child in transform)
+		{
+			_childList.Add(child);
+		}
+
+		_childList = _childList.OrderBy( t => t.transform.position.x).ToList();
+		_childOriginalPosition = _childList.Select( c => c.transform.position).ToList();
+
+		// reset position
+		for(int i = 0; i < _childList.Count; i++)
+		{
+			_childList[i].transform.position = _childOriginalPosition[i];
+		}
 	}
 		
 
@@ -37,29 +52,6 @@ public class Background : MonoBehaviour
 
 	public void Stop()
 	{
-	}
-
-
-	void GetChild()
-	{
-		_childList = new List<Transform>();
-		_childOriginalPosition = new List<Vector3>();
-
-		foreach(Transform child in transform)
-		{
-			_childList.Add(child);
-		}
-
-		_childList = _childList.OrderBy( t => t.transform.position.x).ToList();
-		_childOriginalPosition = _childList.Select( c => c.transform.position).ToList();
-	}
-
-	void ResetPosition()
-	{
-		for(int i = 0; i < _childList.Count; i++)
-		{
-			_childList[i].transform.position = _childOriginalPosition[i];
-		}
 	}
 
 
