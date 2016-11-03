@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ForestBackground : MonoBehaviour , IStaticScene
+public class StaticLayer : MonoBehaviour , IStaticScene
 {
 	public void Initialize()
 	{}

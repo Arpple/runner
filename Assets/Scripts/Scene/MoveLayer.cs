@@ -3,13 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using Zenject;
 using System.Linq;
-using ModestTree;
 
-public class Background : MonoBehaviour
+public class MoveLayer : MonoBehaviour, IMovableScene
 {
-	//Property
 	List<Transform> _childList;
-	List<Vector3> _childOriginalPosition;
+	List<Vector3> _childOriginalPositionList;
 
 	LevelHelper _level;
 
@@ -21,48 +19,43 @@ public class Background : MonoBehaviour
 		_level = level;
 	}
 
-
 	public void Initialize()
 	{
-		// get child
-		_childList = new List<Transform>();
-		_childOriginalPosition = new List<Vector3>();
+		if(_childList == null)
+		{
+			GetChild();
+		}
+			
+		//reset position
+		_childList.ZipDo(_childOriginalPositionList, 
+			(child, childOriginalPosition) => 
+			{
+				child.transform.position = childOriginalPosition;
+			}
+		);
+	}
 
+	void GetChild()
+	{
+		_childList = new List<Transform>();
+		_childOriginalPositionList = new List<Vector3>();
+
+		//Get Child
 		foreach(Transform child in transform)
 		{
 			_childList.Add(child);
 		}
 
-		_childList = _childList.OrderBy( t => t.transform.position.x).ToList();
-		_childOriginalPosition = _childList.Select( c => c.transform.position).ToList();
-
-		// reset position
-		for(int i = 0; i < _childList.Count; i++)
-		{
-			_childList[i].transform.position = _childOriginalPosition[i];
-		}
+		_childList = _childList.OrderBy( child => child.transform.position.x).ToList();
+		_childOriginalPositionList = _childList.Select( child => child.transform.position).ToList();
 	}
-		
 
 	public void Tick(float playerSpeed)
 	{
-		Move(playerSpeed);
-		LoopBackground();
-	}
-
-	public void Stop()
-	{
-	}
-
-
-	void Move(float playerSpeed)
-	{
+		//move
 		transform.Translate(new Vector3(- playerSpeed * Time.deltaTime, 0, 0));
-	}
 
-
-	void LoopBackground()
-	{
+		//looping background
 		Transform left = _childList.FirstOrDefault();
 		SpriteRenderer leftSprite = left.GetComponent<SpriteRenderer>();
 
@@ -79,5 +72,10 @@ public class Background : MonoBehaviour
 			_childList.Remove(left);
 			_childList.Add(left);
 		}
+	}
+
+	public void Stop()
+	{
+		
 	}
 }
