@@ -3,8 +3,8 @@
 
 ## Progress
 - [x] main game state
-- [x] interface
-   + [ ] customize
+- [x] interface class
+   + [x] customize
 - [ ] Runner 2/3
 - [ ] Equipment 1/3
 - [ ] Level 1/x
