@@ -6,6 +6,9 @@ using System.Linq;
 
 public class MoveLayer : MonoBehaviour, IMovableScene
 {
+	public float SpaceBetweenLoop;
+	public int SpaceRandomRange;
+
 	List<Transform> _childList;
 	List<Vector3> _childOriginalPositionList;
 
@@ -31,7 +34,8 @@ public class MoveLayer : MonoBehaviour, IMovableScene
 		Transform original = _childList.FirstOrDefault();
 		Transform dupplicate = Instantiate(original);
 		dupplicate.SetParent(original.parent, false);
-		dupplicate.MoveToRight(original);
+
+		dupplicate.MoveToRight(original, GetSpace());
 		_childList.Add(dupplicate);
 
 		_childOriginalPositionList = _childList.Select( child => child.transform.position).ToList();
@@ -52,7 +56,8 @@ public class MoveLayer : MonoBehaviour, IMovableScene
 	public void Tick(float playerSpeed)
 	{
 		//move
-		transform.Translate(new Vector3(- playerSpeed * Time.deltaTime, 0, 0));
+		_childList.ForEach(child => child.Translate(new Vector3(- playerSpeed * Time.deltaTime, 0, 0)));
+		//transform.Translate(new Vector3(- playerSpeed * Time.deltaTime, 0, 0));
 
 		//looping background
 		Transform left = _childList.FirstOrDefault();
@@ -61,7 +66,7 @@ public class MoveLayer : MonoBehaviour, IMovableScene
 		if(leftSprite.bounds.max.x < _level.Left)
 		{
 			Transform right = _childList.LastOrDefault();
-			left.MoveToRight(right);
+			left.MoveToRight(right, GetSpace());
 
 			_childList.Remove(left);
 			_childList.Add(left);
@@ -71,5 +76,18 @@ public class MoveLayer : MonoBehaviour, IMovableScene
 	public void Stop()
 	{
 		
+	}
+
+	float GetSpace()
+	{
+		float space = SpaceBetweenLoop;
+		if(SpaceRandomRange > 0)
+		{
+			space += Random.Range(-SpaceRandomRange, SpaceRandomRange);
+		}
+		if(space < 0)
+			space = 0;
+
+		return space;
 	}
 }
