@@ -6,10 +6,20 @@ using System.Collections.Generic;
 public class GameScene : MonoBehaviour
 {
 	public StaticLayer BackgroundObj;
-	public List<MoveLayer> MoveLayerList;
+	List<MoveLayer> MoveLayerList;
 
 	public void Initialize()
 	{
+		MoveLayerList = new List<MoveLayer>();
+		foreach(Transform child in transform)
+		{
+			MoveLayer moveLayer = child.GetComponent<MoveLayer>();
+			if(moveLayer != null)
+			{
+				MoveLayerList.Add(moveLayer);
+			}
+		}
+
 		BackgroundObj.Initialize();
 		MoveLayerList.ForEach(moveLayer => moveLayer.Initialize());
 	}

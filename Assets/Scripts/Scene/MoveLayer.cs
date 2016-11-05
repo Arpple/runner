@@ -4,10 +4,17 @@ using System.Collections.Generic;
 using Zenject;
 using System.Linq;
 
+/// <summary>
+/// View layer that move along with runner
+/// contain child that have SpriteRenderer.
+/// loop continuously by append at last of child when out of sight
+/// </summary>
 public class MoveLayer : MonoBehaviour, IMovableScene
 {
 	public float SpaceBetweenLoop;
 	public int SpaceRandomRange;
+
+	public bool AutoCloneChild = true;
 
 	List<Transform> _childList;
 	List<Vector3> _childOriginalPositionList;
@@ -30,14 +37,17 @@ public class MoveLayer : MonoBehaviour, IMovableScene
 			_childList.Add(child);
 		}
 
-		//dupplicate for looping
-		Transform original = _childList.FirstOrDefault();
-		Transform dupplicate = Instantiate(original);
-		dupplicate.SetParent(original.parent, false);
+		if(AutoCloneChild)
+		{
+			Transform original = _childList.FirstOrDefault();
+			Transform dupplicate = Instantiate(original);
+			dupplicate.SetParent(original.parent, false);
 
-		dupplicate.MoveToRight(original, GetSpace());
-		_childList.Add(dupplicate);
+			dupplicate.MoveToRight(original, GetSpace());
+			_childList.Add(dupplicate);
+		}
 
+		_childList = _childList.OrderBy( child => child.position.x ).ToList();
 		_childOriginalPositionList = _childList.Select( child => child.transform.position).ToList();
 	}
 
@@ -57,7 +67,6 @@ public class MoveLayer : MonoBehaviour, IMovableScene
 	{
 		//move
 		_childList.ForEach(child => child.Translate(new Vector3(- playerSpeed * Time.deltaTime, 0, 0)));
-		//transform.Translate(new Vector3(- playerSpeed * Time.deltaTime, 0, 0));
 
 		//looping background
 		Transform left = _childList.FirstOrDefault();
