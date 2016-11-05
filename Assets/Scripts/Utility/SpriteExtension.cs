@@ -14,6 +14,6 @@ public static class SpriteExtension
 		Vector3 leftPosition = leftTransform.position;
 		Vector3 leftSize = leftSprite.bounds.max - leftSprite.bounds.min;
 
-		rightTransform.position = new Vector3(leftPosition.x + leftSize.x + space, leftPosition.y, leftPosition.z);
+		rightTransform.position = new Vector3(leftPosition.x + leftSize.x + space, rightTransform.position.y, rightTransform.position.z);
 	}
 }
