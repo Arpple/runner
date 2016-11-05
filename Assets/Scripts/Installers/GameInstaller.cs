@@ -15,10 +15,12 @@ public class GameInstaller : MonoInstaller
 
 	[InjectOptional(Id = "GameInstaller_Runner")] GameObject _runner;
 	[InjectOptional(Id = "GameInstaller_Equipment")] GameObject _equipment;
+	[InjectOptional(Id = "GameInstaller_Level")] GameObject _level;
 
     public override void InstallBindings()
     {
 		InstallMain();
+		InstallScene();
 		InstallRunner();
 		InstallWeapon();
 		InstallEnemy();
@@ -30,6 +32,11 @@ public class GameInstaller : MonoInstaller
 		Container.Bind<IInitializable>().To<GameController>().AsSingle();
 		Container.Bind<ITickable>().To<GameController>().AsSingle();
 		Container.Bind<IDisposable>().To<GameController>().AsSingle();
+	}
+
+	void InstallScene()
+	{
+		Container.Bind<GameScene>().FromPrefab(_level).AsSingle();
 	}
 
 	void InstallRunner()

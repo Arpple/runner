@@ -18,4 +18,5 @@ public class GameDatabase : ScriptableObject
 	public GameObject Selector;
 	public List<GameObject> RunnerList;
 	public List<GameObject> EquipmentList;
+	public List<GameObject> LevelList;
 }

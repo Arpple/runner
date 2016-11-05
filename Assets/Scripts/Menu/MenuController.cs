@@ -22,6 +22,7 @@ public class MenuController : MonoBehaviour, IInitializable
 
 	RunnerSelector _runner;
 	EquipmentSelector _equipment;
+	LevelSelector _level;
 
 	public void Initialize()
 	{
@@ -36,12 +37,18 @@ public class MenuController : MonoBehaviour, IInitializable
 		Assert.That(_dataBase.EquipmentList.Count > 0, "Equipment database not set");
 		_equipment = new EquipmentSelector(transform);
 		_equipment.Initialize(_dataBase);
+
+		//Create Equipment
+		Assert.That(_dataBase.LevelList.Count > 0, "Level database not set");
+		_level = new LevelSelector(transform);
+		_level.Initialize(_dataBase);
 	}
 
 
 	public void StartGame()
 	{
 		if(_runner.Selected == null
+			|| _level.Selected == null
 		)
 		{
 			return;
@@ -53,6 +60,7 @@ public class MenuController : MonoBehaviour, IInitializable
 				container.Bind<GameObject>().WithId("GameInstaller_Runner").FromInstance(_runner.Selected).AsSingle().WhenInjectedInto<GameInstaller>();
 				if(_equipment.Selected != null)
 					container.Bind<GameObject>().WithId("GameInstaller_Equipment").FromInstance(_equipment.Selected).WhenInjectedInto<GameInstaller>();
+				container.Bind<GameObject>().WithId("GameInstaller_Level").FromInstance(_level.Selected).WhenInjectedInto<GameInstaller>();
 			});
 	}
 }
