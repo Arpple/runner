@@ -13,9 +13,9 @@
 ## Low Priority/Not Neccessary Task
 - fix jump logic : increase jump while jumping if holding instead => no delay feeling
 - fix update to thread instead to reduce frame range ?
+- fix enemy factory , current is too much hardcoded and low reusability : why need cactus and pinkcactus class ?
 
 ## Tools
 - Unity 5.3.5
    + Asset : Zenject IOC
 - MonoDevelop-Unity 5.9.6
-

@@ -84,6 +84,7 @@ public class GameInstaller : MonoInstaller
 		Container.Bind<EnemyFactory>().AsSingle();
 		Container.BindFactory<Cactus, Cactus.Factory>().FromPrefab(_settings.EnemySettings.CactusPrefab);
 		Container.BindFactory<Bird, Bird.Factory>().FromPrefab(_settings.EnemySettings.BirdPrefab);
+		Container.BindFactory<PinkCactus, PinkCactus.Factory>().FromPrefab(_settings.EnemySettings.PinkCactusPrefab);
 	}
 
 	void InstallMisc()
@@ -108,6 +109,7 @@ public class GameInstaller : MonoInstaller
 		{
 			public GameObject CactusPrefab;
 			public GameObject BirdPrefab;
+			public GameObject PinkCactusPrefab;
 		}
 
 		[Serializable]
