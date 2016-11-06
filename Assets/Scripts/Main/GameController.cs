@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using Zenject;
 using ModestTree;
+using UnityEngine.SceneManagement;
 
 public class GameController : IInitializable, ITickable, IDisposable
 {
@@ -24,13 +25,15 @@ public class GameController : IInitializable, ITickable, IDisposable
 	readonly Signals.PlayerDead _playerDeadSignal;
 	readonly ScoreManager _score;
 	readonly GameScene _scene;
+	readonly GameOverUI _gameOverUI;
 
 	public GameController(
 		IRunner runner,
 		EnemyManager enemyManager,
 		GameScene scene,
 		Signals.PlayerDead playerDeadSignal,
-		ScoreManager score
+		ScoreManager score,
+		GameOverUI gameOverUI
 	)
 	{
 		_runner = runner;
@@ -38,18 +41,25 @@ public class GameController : IInitializable, ITickable, IDisposable
 		_playerDeadSignal = playerDeadSignal;
 		_score = score;
 		_scene = scene;
+		_gameOverUI = gameOverUI;
 	}
 
 
 	public void Initialize()
 	{
 		_playerDeadSignal.Event += OnPlayerDead;
+
+		//Add GameOverUI  button action
+		_gameOverUI.Hide();
+		_gameOverUI.RetryButton.onClick.AddListener(StartGame);
+		_gameOverUI.ExitButton.onClick.AddListener(Dispose);
 	}
 
 
 	public void Dispose()
 	{
 		_playerDeadSignal.Event -= OnPlayerDead;
+		SceneManager.LoadScene("menu");
 	}
 
 
@@ -128,10 +138,10 @@ public class GameController : IInitializable, ITickable, IDisposable
 	void UpdateGameOver()
 	{
 		Assert.That(_state == GameStates.GameOver);
-		if(Input.GetMouseButtonDown(0))
-		{
-			StartGame();
-		}
+//		if(Input.GetMouseButtonDown(0))
+//		{
+//			StartGame();
+//		}
 	}
 	#endregion
 
@@ -143,6 +153,7 @@ public class GameController : IInitializable, ITickable, IDisposable
 		_enemyManager.Initialize();
 		_score.Initialize();
 		_scene.Initialize();
+		_gameOverUI.Hide();
 	}
 
 
@@ -154,6 +165,7 @@ public class GameController : IInitializable, ITickable, IDisposable
 		_enemyManager.Stop();
 		_score.NewScore();
 		_scene.Stop();
+		_gameOverUI.Show();
 	}
 
 }
