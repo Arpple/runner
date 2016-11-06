@@ -4,8 +4,10 @@ using System;
 using Zenject;
 using ModestTree;
 
-public class Cactus : Enemy
+public class Bird : Enemy
 {
+	public float FlySpeed;
+
 	public override void Initialize()
 	{
 		
@@ -13,7 +15,7 @@ public class Cactus : Enemy
 
 	public override void Tick(float playerSpeed)
 	{
-		transform.Translate(new Vector3(- playerSpeed * Time.deltaTime, 0 , 0));
+		transform.Translate(new Vector3(- (playerSpeed + FlySpeed) * Time.deltaTime, 0 , 0));
 	}
 
 	public override void Dispose()
@@ -21,7 +23,9 @@ public class Cactus : Enemy
 		GameObject.Destroy(gameObject);
 	}
 
-	public class Factory : Factory<Cactus>
+	public class Factory : Factory<Bird>
 	{
 	}
+
+
 }

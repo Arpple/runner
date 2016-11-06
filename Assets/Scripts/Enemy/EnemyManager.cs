@@ -58,17 +58,17 @@ public class EnemyManager
 		if(_enemyList.Count < _settings.MaxEnemy)
 		{
 			//Spawn new enemy
-			Enemy enemy = _enemyFactory.CreateEnemy(EnemyTypes.Cactus);
-			enemy.transform.SetParent(_spawnPoint);
+			Enemy enemy = _enemyFactory.CreateEnemy(RandomEnemy());
+			enemy.Initialize();
 
 			if(_enemyList.Count > 0)
 			{
 				Vector3 lastPosition = _enemyList.LastOrDefault().transform.position;
-				enemy.transform.position = new Vector3(lastPosition.x + GetGap(playerSpeed), lastPosition.y, lastPosition.z);
+				enemy.transform.position = new Vector3(lastPosition.x + GetGap(playerSpeed), enemy.transform.position.y, enemy.transform.position.z);
 			}
 			else
 			{
-				enemy.transform.position = _spawnPoint.position;
+				enemy.transform.position = new Vector3(_spawnPoint.position.x, enemy.transform.position.y, enemy.transform.position.z);
 			}
 			_enemyList.Add(enemy);
 		}
@@ -83,6 +83,12 @@ public class EnemyManager
 				_enemyList.RemoveAt(0);	
 			}
 		}
+	}
+
+	EnemyTypes RandomEnemy()
+	{
+		Array values = Enum.GetValues(typeof(EnemyTypes));
+		return (EnemyTypes)values.GetValue(UnityEngine.Random.Range(0, values.Length));
 	}
 
 
