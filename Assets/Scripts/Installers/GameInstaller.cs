@@ -36,7 +36,14 @@ public class GameInstaller : MonoInstaller
 
 	void InstallScene()
 	{
-		Container.Bind<GameScene>().FromPrefab(_level).AsSingle();
+		if(_level != null)
+		{
+			Container.Bind<GameScene>().FromPrefab(_level).AsSingle();
+		}
+		else
+		{
+			Container.Bind<GameScene>().FromPrefab(_settings.DefaultScene).AsSingle();
+		}
 	}
 
 	void InstallRunner()
@@ -90,6 +97,7 @@ public class GameInstaller : MonoInstaller
 	{
 		public GameObject DefaultRunner;
 		public GameObject DefaultEquipment;
+		public GameObject DefaultScene;
 
 		public Enemy EnemySettings;
 		public Weapon WeaponSettings;
