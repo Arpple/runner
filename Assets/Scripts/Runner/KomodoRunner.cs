@@ -35,8 +35,13 @@ public class KomodoRunner : MonoBehaviour , IRunner
 		_deadTrigger = deadTrigger;
 		_weapon = weapon;
 		_animator = GetComponentInChildren<Animator>();
-
 		_state = PlayerStates.OnGround;
+
+		GameObject container = GameObject.FindGameObjectWithTag("RunnerContainer");
+		if(container != null)
+		{
+			transform.SetParent(container.transform, false);
+		}
 
 		_originalPosition = transform.position;
 	}

@@ -10,9 +10,7 @@ public class EnemyManager
 {
 	
 	readonly List<Enemy> _enemyList = new List<Enemy>();
-	float _spawnTime;
-	float _spawnCounter;
-		
+
 
 	readonly Settings _settings;
 	readonly EnemyFactory _enemyFactory;
@@ -47,8 +45,6 @@ public class EnemyManager
 			enemy.Dispose();
 		}
 		_enemyList.Clear();
-		_spawnTime = _settings.SpawnTimeInitial;
-		_spawnCounter = _spawnTime;
 	}
 
 
@@ -59,18 +55,34 @@ public class EnemyManager
 
 	public void Tick(float playerSpeed)
 	{
-		for(int i=0; i < _enemyList.Count ;)
+		if(_enemyList.Count < _settings.MaxEnemy)
 		{
-			_enemyList[i].Tick(playerSpeed);
-			if(CheckDispose(_enemyList[i]))
+			//Spawn new enemy
+			Enemy enemy = _enemyFactory.CreateEnemy(EnemyTypes.Cactus);
+			enemy.transform.SetParent(_spawnPoint);
+
+			if(_enemyList.Count > 0)
 			{
-				_enemyList[i].Dispose();
-				_enemyList.RemoveAt(i);
+				Vector3 lastPosition = _enemyList.LastOrDefault().transform.position;
+				enemy.transform.position = new Vector3(lastPosition.x + GetGap(playerSpeed), lastPosition.y, lastPosition.z);
 			}
 			else
-				i++;
+			{
+				enemy.transform.position = _spawnPoint.position;
+			}
+			_enemyList.Add(enemy);
 		}
-		Spawn();
+
+		if(_enemyList.Count > 0)
+		{
+			_enemyList.ForEach(enemy => enemy.Tick(playerSpeed));
+
+			if(CheckDispose(_enemyList.First()))
+			{
+				_enemyList[0].Dispose();
+				_enemyList.RemoveAt(0);	
+			}
+		}
 	}
 
 
@@ -79,33 +91,24 @@ public class EnemyManager
 		return enemy.transform.position.x < _level.Left;
 	}
 
+	float GetGap(float speed)
+	{
+		float minGap = _settings.MinGapInitial * _settings.GapCofactor + speed;
+		float maxGap = _settings.MaxGapInitial * _settings.GapCofactor + speed;
+		return UnityEngine.Random.Range(minGap, maxGap);
+	}
+
 
 	void Spawn()
 	{
-		_spawnCounter -= Time.deltaTime;
-		if(_spawnCounter <= 0)
-		{
-			Enemy enemy = _enemyFactory.CreateEnemy(EnemyTypes.Cactus);
-			enemy.transform.position = _spawnPoint.position;
-			enemy.transform.SetParent(_spawnPoint);
-			_enemyList.Add(enemy);
-
-			_spawnCounter = _spawnTime;
-			if(_spawnTime > _settings.SpawnTimeMinumum)
-			{
-				_spawnTime -= _settings.SpawnTimeReduct;
-				if(_spawnTime < _settings.SpawnTimeMinumum)
-					_spawnTime = _settings.SpawnTimeMinumum;
-			}
-		}
 	}
-
 
 	[Serializable]
 	public class Settings
 	{
-		public float SpawnTimeInitial;
-		public float SpawnTimeReduct;
-		public float SpawnTimeMinumum;
+		public int MaxEnemy;
+		public float MinGapInitial;
+		public float MaxGapInitial;
+		public float GapCofactor;
 	}
 }
