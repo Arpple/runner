@@ -14,16 +14,17 @@ public class LevelSelector
 	public Transform ListContainer;
 
 	public LevelSelector(
-		Transform menu
+		Transform customizeMenu
 	)
 	{
-		Main = menu.Find("Level");
+		Main = customizeMenu.Find("Level");
 		ListContainer = Main.Find("List");
 		Text = Main.Find("Text").GetComponent<Text>();
 	}
 
 	public void Initialize(GameDatabase dataBase)
 	{
+		SetText("--");
 		List = new List<GameObject>();
 
 		dataBase.LevelList.ForEach( 
@@ -57,7 +58,12 @@ public class LevelSelector
 		string name = "None";
 		if(level != null)
 			name = level.name;
-		Text.text = "Level Selected : \n" + name;
+		SetText(name);
 		Debug.Log("Level Selected : " + name);
+	}
+
+	void SetText(string name)
+	{
+		Text.text = "-- Level Selected --\n" + name;
 	}
 }

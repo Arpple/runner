@@ -28,19 +28,21 @@ public class MenuController : MonoBehaviour, IInitializable
 	{
 		Debug.Log("Menu Initializing");
 
+		Transform customizeHolder = transform.Find("Customize");
+
 		//Create Runner
 		Assert.That(_dataBase.RunnerList.Count > 0, "Runner database not set");
-		_runner = new RunnerSelector(transform);
+		_runner = new RunnerSelector(customizeHolder);
 		_runner.Initialize(_dataBase);
 
 		//Create Equipment
 		Assert.That(_dataBase.EquipmentList.Count > 0, "Equipment database not set");
-		_equipment = new EquipmentSelector(transform);
+		_equipment = new EquipmentSelector(customizeHolder);
 		_equipment.Initialize(_dataBase);
 
 		//Create Equipment
 		Assert.That(_dataBase.LevelList.Count > 0, "Level database not set");
-		_level = new LevelSelector(transform);
+		_level = new LevelSelector(customizeHolder);
 		_level.Initialize(_dataBase);
 	}
 

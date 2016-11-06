@@ -14,16 +14,17 @@ public class EquipmentSelector
 	public Transform ListContainer;
 
 	public EquipmentSelector(
-		Transform menu
+		Transform customizeMenu
 	)
 	{
-		Main = menu.Find("Equipment");
+		Main = customizeMenu.Find("Equipment");
 		ListContainer = Main.Find("List");
 		Text = Main.Find("Text").GetComponent<Text>();
 	}
 
 	public void Initialize(GameDatabase dataBase)
 	{
+		SetText("--");
 		List = new List<GameObject>();
 
 		dataBase.EquipmentList.ForEach( 
@@ -57,7 +58,12 @@ public class EquipmentSelector
 		string name = "None";
 		if(equipment != null)
 			name = equipment.name;
-		Text.text = "Equipment Selected : \n" + name;
+		SetText(name);
 		Debug.Log("Equipment Selected : " + name);
+	}
+
+	void SetText(string name)
+	{
+		Text.text = "-- Equipment Selected --\n" + name;
 	}
 }

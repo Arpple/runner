@@ -14,16 +14,17 @@ public class RunnerSelector
 	public Transform ListContainer;
 
 	public RunnerSelector(
-		Transform menu
+		Transform customizeMenu
 	)
 	{
-		Main = menu.Find("Runner");
+		Main = customizeMenu.Find("Runner");
 		ListContainer = Main.Find("List");
 		Text = Main.Find("Text").GetComponent<Text>();
 	}
 
 	public void Initialize(GameDatabase dataBase)
 	{
+		SetText("--");
 		List = new List<GameObject>();
 
 		dataBase.RunnerList.ForEach( 
@@ -45,7 +46,12 @@ public class RunnerSelector
 	void SetRunner(GameObject runner)
 	{
 		Selected = runner;
-		Text.text = "Runner Selected : \n" + runner.name;
+		SetText(runner.name);
 		Debug.Log("Runner Selected : " + runner);
+	}
+
+	void SetText(string name)
+	{
+		Text.text = "-- Runner Selected --\n" + name;
 	}
 }
