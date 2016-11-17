@@ -75,13 +75,19 @@ public class EnemyManager
 
 		if(_enemyList.Count > 0)
 		{
-			_enemyList.ForEach(enemy => enemy.Tick(playerSpeed));
+			var deadEnemies = new List<Enemy>();
+			_enemyList.ForEach(enemy => {
+				enemy.Tick(playerSpeed);
+				if(CheckDispose(enemy))
+				{
+					deadEnemies.Add(enemy);
+				}
+			});
 
-			if(CheckDispose(_enemyList.First()))
-			{
-				_enemyList[0].Dispose();
-				_enemyList.RemoveAt(0);	
-			}
+			deadEnemies.ForEach(e => {
+				e.Dispose();
+				_enemyList.Remove(e);
+			});
 		}
 	}
 
@@ -94,7 +100,7 @@ public class EnemyManager
 
 	bool CheckDispose(Enemy enemy)
 	{
-		return enemy.transform.position.x < _level.Left;
+		return enemy.transform.position.x < _level.Left || enemy.IsDead();
 	}
 
 	float GetGap(float speed)

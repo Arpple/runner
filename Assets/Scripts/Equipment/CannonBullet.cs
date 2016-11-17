@@ -8,6 +8,7 @@ public class CannonBullet : MonoBehaviour, IBullet, IEnemyHitable
 {
 	Settings _settings;
 	float _lifeTimeCounter;
+	private bool _forceDispose = false;
 
 	[Inject]
 	public void Construct(
@@ -29,13 +30,13 @@ public class CannonBullet : MonoBehaviour, IBullet, IEnemyHitable
 
 	public void Tick()
 	{
-		Move();
+		transform.Translate(new Vector3(_settings.Speed * Time.deltaTime, 0, 0));
 		_lifeTimeCounter -= Time.deltaTime;
 	}
 
 	public bool CheckDispose()
 	{
-		return _lifeTimeCounter <= 0;
+		return _lifeTimeCounter <= 0 || _forceDispose;
 	}
 
 	public void Dispose()
@@ -43,14 +44,10 @@ public class CannonBullet : MonoBehaviour, IBullet, IEnemyHitable
 		Destroy(gameObject);
 	}
 
-	void Move()
-	{
-		transform.Translate(new Vector3(_settings.Speed * Time.deltaTime, 0, 0));
-	}
-
 	public void OnHitEnemy(Enemy enemy)
 	{
-		Debug.Log("HIT");
+		enemy.Dead();
+		_forceDispose = true;
 	}
 
 	[Serializable]

@@ -26,7 +26,6 @@ public class Cannon : MonoBehaviour, IEquipment
 		_bulletFactory = bulletFactory;
 
 		transform.SetParent(runner.GetObject().transform, false);
-		gameObject.SetActive(true);
 	}
 
 	public void Initialize()
