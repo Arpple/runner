@@ -7,8 +7,7 @@ using ModestTree;
 public class GreyRunner : MonoBehaviour , IRunner
 {
 	public IRunnerSettings Setting;
-
-	[InjectOptional(Id = "runner_container")] GameObject Container;
+	public EquipmentSlot EquipmentSlot;
 
 	public enum PlayerStates
 	{
@@ -34,20 +33,27 @@ public class GreyRunner : MonoBehaviour , IRunner
 	{
 		_deadTrigger = deadTrigger;
 		_state = PlayerStates.OnGround;
+		GameObject container = GameObject.FindGameObjectWithTag("RunnerContainer");
+		if(container != null)
+		{
+			transform.SetParent(container.transform, false);
+		}
 
 		_originalPosition = transform.position;
 	}
 
 	public void Initialize()
 	{
-		if(Container != null)
-			transform.SetParent(Container.transform);
-
 		CurrentSpeed = Setting.InitialSpeed;
 		transform.position = _originalPosition;
 		_state = PlayerStates.OnGround;
 		if(_weapon != null)
 			_weapon.Initialize();
+	}
+
+	public EquipmentSlot GetEquipmentSlot()
+	{
+		return EquipmentSlot;
 	}
 
 	public void Tick()

@@ -18,6 +18,7 @@ public interface IRunner
 	void StopAction();
 
 	GameObject GetObject();
+	EquipmentSlot GetEquipmentSlot();
 }
 
 

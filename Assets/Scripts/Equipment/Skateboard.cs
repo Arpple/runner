@@ -16,7 +16,11 @@ public class Skateboard : MonoBehaviour, IEquipment
 	{
 		_settings = settings;
 		_runner = runner;
-		transform.SetParent(runner.GetObject().transform, false);
+		var runnerSlot = _runner.GetEquipmentSlot();
+		if(runnerSlot != null)
+		{
+			runnerSlot.SetEquipment(gameObject, "Foot");
+		}
 	}
 
 	public void Initialize()

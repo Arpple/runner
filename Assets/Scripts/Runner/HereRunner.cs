@@ -7,6 +7,7 @@ using ModestTree;
 public class HereRunner : MonoBehaviour , IRunner
 {
 	public IRunnerSettings Setting;
+	public EquipmentSlot EquipmentSlot;
 
 	public enum PlayerStates
 	{
@@ -44,6 +45,11 @@ public class HereRunner : MonoBehaviour , IRunner
 		}
 
 		_originalPosition = transform.position;
+	}
+
+	public EquipmentSlot GetEquipmentSlot()
+	{
+		return EquipmentSlot;
 	}
 
 	public void Initialize()

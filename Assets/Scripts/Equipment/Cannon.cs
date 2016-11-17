@@ -25,7 +25,15 @@ public class Cannon : MonoBehaviour, IEquipment
 		_settings = settings;
 		_bulletFactory = bulletFactory;
 
-		transform.SetParent(runner.GetObject().transform, false);
+		var runnerSlot = runner.GetEquipmentSlot();
+		if(runnerSlot != null)
+		{
+			runnerSlot.SetEquipment(gameObject, "Hand");
+		}
+		else
+		{
+			transform.SetParent(runner.GetObject().transform, false);
+		}
 	}
 
 	public void Initialize()
