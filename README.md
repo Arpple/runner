@@ -6,9 +6,9 @@
 - [x] interface class
    + [x] customize
 - [ ] Runner 2/3
-- [ ] Equipment 1/3
-- [ ] Level 1/x
-- [ ] Enemy 1/x
+- [ ] Equipment 2/3
+- [x] Level 3/3
+- [x] Enemy 3/3
 
 ## Low Priority/Not Neccessary Task
 - fix jump logic : increase jump while jumping if holding instead => no delay feeling
