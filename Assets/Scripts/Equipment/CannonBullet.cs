@@ -4,7 +4,7 @@ using System;
 using Zenject;
 using ModestTree;
 
-public class CannonBullet : MonoBehaviour, IBullet
+public class CannonBullet : MonoBehaviour, IBullet, IEnemyHitable
 {
 	Settings _settings;
 	float _lifeTimeCounter;
@@ -46,6 +46,11 @@ public class CannonBullet : MonoBehaviour, IBullet
 	void Move()
 	{
 		transform.Translate(new Vector3(_settings.Speed * Time.deltaTime, 0, 0));
+	}
+
+	public void OnHitEnemy(Enemy enemy)
+	{
+		Debug.Log("HIT");
 	}
 
 	[Serializable]
