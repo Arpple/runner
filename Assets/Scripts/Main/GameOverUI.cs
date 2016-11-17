@@ -6,11 +6,12 @@ using UnityEngine.UI;
 public class GameOverUI : MonoBehaviour 
 {
 	public Button RetryButton;
-	public Button ExitButton;
+    public Button ExitButton;
 
 	public void Show()
 	{
 		gameObject.SetActive(true);
+
 	}
 
 	public void Hide()
