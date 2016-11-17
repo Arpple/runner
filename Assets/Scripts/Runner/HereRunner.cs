@@ -4,7 +4,7 @@ using Zenject;
 using System;
 using ModestTree;
 
-public class KomodoRunner : MonoBehaviour , IRunner
+public class HereRunner : MonoBehaviour , IRunner
 {
 	public IRunnerSettings Setting;
 

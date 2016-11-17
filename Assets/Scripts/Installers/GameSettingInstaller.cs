@@ -23,6 +23,7 @@ public class GameSettingInstaller : ScriptableObjectInstaller
 	{
 		Container.BindInstance(Equipment.Cannon);
 		Container.BindInstance(Equipment.CannonBullet);
+		Container.BindInstance(Equipment.Skateboard);
 
 		Container.BindInstance(Enemy.ManagerSetting);
 	}
@@ -32,6 +33,8 @@ public class GameSettingInstaller : ScriptableObjectInstaller
 	{
 		public Cannon.Settings Cannon;
 		public CannonBullet.Settings CannonBullet;
+
+		public Skateboard.Settings Skateboard;
 	}
 
 		
