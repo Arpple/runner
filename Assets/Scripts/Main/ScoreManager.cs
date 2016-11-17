@@ -6,12 +6,11 @@ using ModestTree;
 
 public class ScoreManager
 {
-	Text _scoreText;
-	Text _highScoreText;
-	int _score = 0;
+	private Text _scoreText;
+	private Text _highScoreText;
+	private int _score = 0;
 
-	[Inject]
-	public void Construct(
+	public ScoreManager(
 		[Inject(Id = "ScoreText")]Text scoreText,
 		[Inject(Id = "HighScoreText")]Text highScoreText
 	)
@@ -59,7 +58,7 @@ public class ScoreManager
 	{
 		Assert.That(_scoreText != null, "Score Text Object is not set");
 
-		_scoreText.text = "Score : " + _score;
+		_scoreText.text = _score.ToString();
 	}
 
 	void UpdateHighScoreText()
@@ -67,6 +66,11 @@ public class ScoreManager
 		Assert.That(_highScoreText != null, "HighScore Text Object is not set");
 
 		_highScoreText.text = "Hi Score : " + LoadHighScore();
+	}
+
+	public int GetScore()
+	{
+		return _score;
 	}
 		
 }
