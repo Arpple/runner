@@ -210,4 +210,9 @@ public class KomodoRunner : MonoBehaviour , IRunner
 		_deadTrigger.Fire();
 		_animator.SetBool("Running", false);
 	}
+
+	public GameObject GetObject()
+	{
+		return gameObject;
+	}
 }

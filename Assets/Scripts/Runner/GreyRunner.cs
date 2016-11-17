@@ -196,4 +196,9 @@ public class GreyRunner : MonoBehaviour , IRunner
 			_deadTrigger.Fire();
 		}
 	}
+
+	public GameObject GetObject()
+	{
+		return gameObject;
+	}
 }

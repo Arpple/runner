@@ -18,11 +18,15 @@ public class Cannon : MonoBehaviour, IEquipment
 	[Inject]
 	public void Construct(
 		Settings settings,
-		BulletFactory bulletFactory
+		BulletFactory bulletFactory,
+		IRunner runner
 	)
 	{
 		_settings = settings;
 		_bulletFactory = bulletFactory;
+
+		transform.SetParent(runner.GetObject().transform, false);
+		gameObject.SetActive(true);
 	}
 
 	public void Initialize()
@@ -33,6 +37,7 @@ public class Cannon : MonoBehaviour, IEquipment
 			_bullets.ForEach(b => b.Dispose());
 		}
 		_bullets = new List<IBullet>();
+
 	}
 
 	public void Tick()

@@ -16,6 +16,8 @@ public interface IRunner
 	void StartAction();
 	void HoldAction();
 	void StopAction();
+
+	GameObject GetObject();
 }
 
 
