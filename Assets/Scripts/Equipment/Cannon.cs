@@ -75,7 +75,7 @@ public class Cannon : MonoBehaviour, IEquipment
 
 		IBullet bullet = _bulletFactory.Create();
 		bullet.Initialize(this);
-		bullet.SetPosition(transform.position);
+		bullet.SetPosition(new Vector2(transform.position.x+1f,transform.position.y));
 		_bullets.Add(bullet);
 
 	}
