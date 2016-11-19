@@ -8,15 +8,19 @@ public class EnemyFactory
 	readonly Bird.Factory _birdFactory;
 	readonly PinkCactus.Factory _pinkCactusFactory;
 
+    readonly Ghosty.Factory _ghostyFactory;
+
 	public EnemyFactory(
 		Cactus.Factory cactusFactory,
 		Bird.Factory birdFactory,
-		PinkCactus.Factory pinkCactusFactory
+		PinkCactus.Factory pinkCactusFactory,
+        Ghosty.Factory ghostyFactory
 	)
 	{
 		_cactusFactory = cactusFactory;
 		_birdFactory = birdFactory;
 		_pinkCactusFactory = pinkCactusFactory;
+        _ghostyFactory = ghostyFactory;
 	}
 
 	public Enemy CreateEnemy(EnemyTypes type)
@@ -29,6 +33,8 @@ public class EnemyFactory
 				return (Enemy)_birdFactory.Create();
 			case EnemyTypes.PinkCactus:
 				return (Enemy)_pinkCactusFactory.Create();
+            case EnemyTypes.Ghosty:
+                return (Enemy)_ghostyFactory.Create();
 		}
 
 		throw Assert.CreateException();

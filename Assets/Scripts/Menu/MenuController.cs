@@ -40,7 +40,7 @@ public class MenuController : MonoBehaviour, IInitializable
 		_equipment = new EquipmentSelector(customizeHolder);
 		_equipment.Initialize(_dataBase);
 
-		//Create Equipment
+		//Create Level
 		Assert.That(_dataBase.LevelList.Count > 0, "Level database not set");
 		_level = new LevelSelector(customizeHolder);
 		_level.Initialize(_dataBase);

@@ -6,6 +6,7 @@ public enum EnemyTypes
 	Cactus,
 	Bird,
 	PinkCactus,
+    Ghosty
 }
 
 public abstract class Enemy : MonoBehaviour

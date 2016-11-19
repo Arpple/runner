@@ -10,7 +10,7 @@ public class EnemyManager
 {
 	
 	readonly List<Enemy> _enemyList = new List<Enemy>();
-
+    readonly List<Enemy> _ghostyList = new List<Enemy>();
 
 	readonly Settings _settings;
 	readonly EnemyFactory _enemyFactory;
@@ -55,6 +55,10 @@ public class EnemyManager
 
 	public void Tick(float playerSpeed)
 	{
+        //TODO : SpawnerGhosty
+        SpawnGhosty(playerSpeed);
+
+        //TODO : Spawn Enemy
 		if(_enemyList.Count < _settings.MaxEnemy)
 		{
 			//Spawn new enemy
@@ -110,6 +114,41 @@ public class EnemyManager
 		return UnityEngine.Random.Range(minGap, maxGap);
 	}
 
+    private float _ghostyCooldown = 2.0f; // CD = 1.0-3.0f
+    private void SpawnGhosty(float playerSpeed) {
+        _ghostyCooldown -= Time.deltaTime;
+
+        if (_ghostyCooldown < 0f && UnityEngine.Random.Range(0, 100) >= 90f && _ghostyList.Count < 10) {
+            Enemy ghosty = _enemyFactory.CreateEnemy(EnemyTypes.Ghosty);
+            ghosty.Initialize();
+            float y_position = UnityEngine.Random.Range(-4f,4f)
+                , x_position = UnityEngine.Random.Range(-GetGap(playerSpeed), GetGap(playerSpeed));
+            if (_ghostyList.Count > 0) {
+                Vector3 lastPosition = _ghostyList.LastOrDefault().transform.position;
+                ghosty.transform.position = new Vector3(lastPosition.x +x_position, ghosty.transform.position.y+y_position, ghosty.transform.position.z);
+            } else {
+                ghosty.transform.position = new Vector3(_spawnPoint.position.x, ghosty.transform.position.y+y_position, ghosty.transform.position.z);
+            }
+            _ghostyList.Add(ghosty);
+            _ghostyCooldown = UnityEngine.Random.Range(1f,3f);
+        }
+
+        if (_ghostyList.Count > 0) {
+            var deadEnemies = new List<Enemy>();
+            _ghostyList.ForEach(enemy => {
+                enemy.Tick(playerSpeed);
+                if (CheckDispose(enemy)) {
+                    deadEnemies.Add(enemy);
+                }
+            });
+
+            deadEnemies.ForEach(e => {
+                e.Dispose();
+                _ghostyList.Remove(e);
+            });
+        }
+
+    }
 
 	void Spawn()
 	{
