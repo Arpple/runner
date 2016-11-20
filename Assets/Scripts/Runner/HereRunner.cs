@@ -8,6 +8,10 @@ public class HereRunner : MonoBehaviour , IRunner
 {
 	public IRunnerSettings Setting;
 	public EquipmentSlot EquipmentSlot;
+	public float CurrentSpeed
+	{
+		get; set;
+	}
 
 	public enum PlayerStates
 	{
@@ -15,17 +19,12 @@ public class HereRunner : MonoBehaviour , IRunner
 		Jumping,
 	}
 
-	PlayerStates _state;
+	private PlayerStates _state;
 
-	Vector3 _originalPosition;
-	Signals.PlayerDead.Trigger _deadTrigger;
-	IEquipment _weapon;
-	Animator _animator;
-
-	public float CurrentSpeed
-	{	
-		get; set;
-	}
+	private Vector3 _originalPosition;
+	private Signals.PlayerDead.Trigger _deadTrigger;
+	private IEquipment _weapon;
+	private Animator _animator;
 
 	[Inject]
 	public void Construct(

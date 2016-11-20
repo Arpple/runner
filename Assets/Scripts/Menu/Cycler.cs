@@ -5,8 +5,8 @@ using ModestTree;
 
 public class Cycler : MonoBehaviour 
 {
-	List<GameObject> _cyclingList;
-	int _index;
+	private List<GameObject> _cyclingList;
+	private int _index;
 
 	public void SetCyclingList(List<GameObject> list)
 	{

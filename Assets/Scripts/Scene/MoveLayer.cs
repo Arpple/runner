@@ -13,13 +13,11 @@ public class MoveLayer : MonoBehaviour, IMovableScene
 {
 	public float SpaceBetweenLoop;
 	public int SpaceRandomRange;
-
 	public bool AutoCloneChild = true;
 
-	List<Transform> _childList;
-	List<Vector3> _childOriginalPositionList;
-
-	LevelHelper _level;
+	private List<Transform> _childList;
+	private List<Vector3> _childOriginalPositionList;
+	private LevelHelper _level;
 
 	[Inject]
 	public void Construct(
@@ -83,9 +81,7 @@ public class MoveLayer : MonoBehaviour, IMovableScene
 	}
 
 	public void Stop()
-	{
-		
-	}
+	{}
 
 	float GetSpace()
 	{

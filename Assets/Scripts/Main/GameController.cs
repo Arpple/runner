@@ -9,7 +9,7 @@ public class GameController : IInitializable, ITickable, IDisposable
 {
 
 	//Property
-	GameStates _state = GameStates.WaitingToStart;
+	private GameStates _state = GameStates.WaitingToStart;
 
 	public enum GameStates
 	{

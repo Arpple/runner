@@ -6,25 +6,23 @@ using ModestTree;
 
 public class GreyRunner : MonoBehaviour , IRunner
 {
-	public IRunnerSettings Setting;
-	public EquipmentSlot EquipmentSlot;
-
 	public enum PlayerStates
 	{
 		OnGround,
 		Jumping,
 	}
 
-	PlayerStates _state;
-
-	Vector3 _originalPosition;
-	Signals.PlayerDead.Trigger _deadTrigger;
-	[InjectOptional] IEquipment _weapon;
-
+	public IRunnerSettings Setting;
+	public EquipmentSlot EquipmentSlot;
 	public float CurrentSpeed
-	{	
+	{
 		get; set;
 	}
+
+	private PlayerStates _state;
+	private Vector3 _originalPosition;
+	private Signals.PlayerDead.Trigger _deadTrigger;
+	[InjectOptional] IEquipment _weapon;
 
 	[Inject]
 	public void Construct(

@@ -8,12 +8,10 @@ using ModestTree;
 
 public class Cannon : MonoBehaviour, IEquipment
 {
-	float _coolDownCounter;
-
-	Settings _settings;
-	IFactory<IBullet> _bulletFactory;
-
-	List<IBullet> _bullets;
+	private float _coolDownCounter;
+	private Settings _settings;
+	private IFactory<IBullet> _bulletFactory;
+	private List<IBullet> _bullets;
 
 	[Inject]
 	public void Construct(

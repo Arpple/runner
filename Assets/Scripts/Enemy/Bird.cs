@@ -10,7 +10,6 @@ public class Bird : Enemy
 
 	public override void Initialize()
 	{
-		
 	}
 
 	public override void Tick(float playerSpeed)
@@ -26,6 +25,4 @@ public class Bird : Enemy
 	public class Factory : Factory<Bird>
 	{
 	}
-
-
 }

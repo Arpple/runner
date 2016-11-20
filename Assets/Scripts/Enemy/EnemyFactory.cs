@@ -7,7 +7,6 @@ public class EnemyFactory
 	readonly Cactus.Factory _cactusFactory;
 	readonly Bird.Factory _birdFactory;
 	readonly PinkCactus.Factory _pinkCactusFactory;
-
     readonly Ghosty.Factory _ghostyFactory;
 
 	public EnemyFactory(

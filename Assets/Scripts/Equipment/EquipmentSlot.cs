@@ -7,13 +7,11 @@ public class EquipmentSlot : MonoBehaviour
 
 	public bool SetEquipment(GameObject equipmentObj, string slotName)
 	{
-		foreach(var slot in Slots)
+		var slot = Slots.Find(s => s.name == slotName);
+		if(slot != null)
 		{
-			if(slot.name == slotName)
-			{
-				equipmentObj.transform.SetParent(slot.transform, false);
-				return true;
-			}
+			equipmentObj.transform.SetParent(slot.transform, false);
+			return true;
 		}
 		return false;
 	}

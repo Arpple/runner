@@ -7,8 +7,12 @@ using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour, IInitializable
 {
-	ZenjectSceneLoader _sceneLoader;
-	GameDatabase _dataBase;
+	private ZenjectSceneLoader _sceneLoader;
+	private GameDatabase _dataBase;
+	private RunnerSelector _runner;
+	private EquipmentSelector _equipment;
+	private LevelSelector _level;
+
 
 	[Inject]
 	public void Constuct(
@@ -20,9 +24,6 @@ public class MenuController : MonoBehaviour, IInitializable
 		_dataBase = database;
 	}
 
-	RunnerSelector _runner;
-	EquipmentSelector _equipment;
-	LevelSelector _level;
 
 	public void Initialize()
 	{

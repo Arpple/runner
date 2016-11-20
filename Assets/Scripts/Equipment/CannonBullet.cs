@@ -6,8 +6,8 @@ using ModestTree;
 
 public class CannonBullet : MonoBehaviour, IBullet, IEnemyHitable
 {
-	Settings _settings;
-	float _lifeTimeCounter;
+	private Settings _settings;
+	private float _lifeTimeCounter;
 	private bool _forceDispose = false;
 
 	[Inject]

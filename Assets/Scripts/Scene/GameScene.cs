@@ -6,33 +6,34 @@ using System.Collections.Generic;
 public class GameScene : MonoBehaviour
 {
 	public StaticLayer BackgroundObj;
-	List<MoveLayer> MoveLayerList;
+
+	private List<MoveLayer> _moveLayerList;
 
 	public void Initialize()
 	{
-		MoveLayerList = new List<MoveLayer>();
+		_moveLayerList = new List<MoveLayer>();
 		foreach(Transform child in transform)
 		{
 			MoveLayer moveLayer = child.GetComponent<MoveLayer>();
 			if(moveLayer != null)
 			{
-				MoveLayerList.Add(moveLayer);
+				_moveLayerList.Add(moveLayer);
 			}
 		}
 
 		BackgroundObj.Initialize();
-		MoveLayerList.ForEach(moveLayer => moveLayer.Initialize());
+		_moveLayerList.ForEach(moveLayer => moveLayer.Initialize());
 	}
 
 	public void Tick(float playerSpeed)
 	{
 		BackgroundObj.Tick();
-		MoveLayerList.ForEach(moveLayer => moveLayer.Tick(playerSpeed));
+		_moveLayerList.ForEach(moveLayer => moveLayer.Tick(playerSpeed));
 	}
 
 	public void Stop()
 	{
 		BackgroundObj.Stop();
-		MoveLayerList.ForEach(moveLayer => moveLayer.Stop());
+		_moveLayerList.ForEach(moveLayer => moveLayer.Stop());
 	}
 }
