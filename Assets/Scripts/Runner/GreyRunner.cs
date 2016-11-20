@@ -12,7 +12,18 @@ public class GreyRunner : MonoBehaviour , IRunner
 		Jumping,
 	}
 
-	public IRunnerSettings Setting;
+	//temp fix
+	public float InitialSpeed = 5;
+	public float Acceleration = 0.003f;
+	public float MaximumSpeed = 30;
+
+	public float Gravity = 0.5f;
+
+	public float MinJumpForce = 10;
+	public float MinJumpHoldTime = 0.05f;
+	public float MaxJumpForce = 20;
+	public float MaxJumpHoldTime = 0.1f;
+	//
 	public EquipmentSlot EquipmentSlot;
 	public float CurrentSpeed
 	{
@@ -42,7 +53,7 @@ public class GreyRunner : MonoBehaviour , IRunner
 
 	public void Initialize()
 	{
-		CurrentSpeed = Setting.InitialSpeed;
+		CurrentSpeed = InitialSpeed;
 		transform.position = _originalPosition;
 		_state = PlayerStates.OnGround;
 		if(_weapon != null)
@@ -95,17 +106,17 @@ public class GreyRunner : MonoBehaviour , IRunner
 	void UpdateOnGround()
 	{
 		Assert.That(_state == PlayerStates.OnGround, "wrong state update");
-		Acceleration();
+		Accelerate();
 	}
 
 	void UpdateJumping()
 	{
 		Assert.That(_state == PlayerStates.Jumping, "wrong state update");
-		Acceleration();
+		Accelerate();
 
 		Assert.That(_jumpForce.x == 0 && _jumpForce.z == 0, "jump force not y-axis");
 		transform.Translate(_jumpForce * Time.deltaTime);
-		_jumpForce.y -= Setting.Gravity;
+		_jumpForce.y -= Gravity;
 
 		if(ReachGround())
 		{
@@ -135,7 +146,7 @@ public class GreyRunner : MonoBehaviour , IRunner
 		if(_state == PlayerStates.OnGround && _jumpHolding)
 		{
 			_jumpHoldTime += Time.deltaTime;
-			if(_jumpHoldTime >= Setting.MaxJumpHoldTime)
+			if(_jumpHoldTime >= MaxJumpHoldTime)
 			{
 				Jump();
 			}
@@ -154,14 +165,14 @@ public class GreyRunner : MonoBehaviour , IRunner
 	{
 		Assert.That(_state == PlayerStates.OnGround);
 		float jumpForce = 0;
-		if(_jumpHoldTime < Setting.MinJumpHoldTime)
+		if(_jumpHoldTime < MinJumpHoldTime)
 		{
-			jumpForce = Setting.MinJumpForce;
+			jumpForce = MinJumpForce;
 		}
 		else
 		{
-			float holdRatio = (_jumpHoldTime - Setting.MinJumpHoldTime) / (Setting.MaxJumpHoldTime - Setting.MinJumpHoldTime);
-			jumpForce = Math.Min(holdRatio * (Setting.MaxJumpForce - Setting.MinJumpForce) + Setting.MinJumpForce, Setting.MaxJumpForce);
+			float holdRatio = (_jumpHoldTime - MinJumpHoldTime) / (MaxJumpHoldTime - MinJumpHoldTime);
+			jumpForce = Math.Min(holdRatio * (MaxJumpForce - MinJumpForce) + MinJumpForce, MaxJumpForce);
 		}
 
 		_state = PlayerStates.Jumping;
@@ -179,26 +190,31 @@ public class GreyRunner : MonoBehaviour , IRunner
 	}
 	#endregion
 
-	void Acceleration()
+	void Accelerate()
 	{
-		if(CurrentSpeed < Setting.MaximumSpeed)
+		if(CurrentSpeed < MaximumSpeed)
 		{
-			CurrentSpeed += Setting.Acceleration;
-			if(CurrentSpeed > Setting.MaximumSpeed)
+			CurrentSpeed += Acceleration;
+			if(CurrentSpeed > MaximumSpeed)
 			{
-				CurrentSpeed = Setting.MaximumSpeed;
+				CurrentSpeed = MaximumSpeed;
 			}
 		}
 			
-		Assert.That(CurrentSpeed <= Setting.MaximumSpeed, "Speed exceed maximum");
+		Assert.That(CurrentSpeed <= MaximumSpeed, "Speed exceed maximum");
 	}
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
 		if(other.GetComponent<Enemy>() != null)
 		{
-			_deadTrigger.Fire();
+			Dead();
 		}
+	}
+
+	void Dead()
+	{
+		_deadTrigger.Fire();
 	}
 
 	public GameObject GetObject()
